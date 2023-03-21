@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Home</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/virtual-select.min.css') }}">
+{% endblock %}
+
+{% block body %}
+<h1>Home pagina</h1>
+<p>{{ time }}</p>
+
+<div>
+    <label for="">Batches</label>
+    <select id="multipleSelect" multiple name="native-select" placeholder="Select Batch" data-search="true" data-silent-initial-value-set="true">
+        {%for batch in files%}
+        <option value="{{batch}}">{{batch}}</option>
+        {%endfor%}
+        <!-- <option value="1">batch 5 - project in griekenland</option>
+        <option value="2">batch 6 - project in nederland</option>
+        <option value="3">batch 7 - project in spanje</option>
+        <option value="4">batch 8 - project in amazone</option>
+        <option value="5">batch 9 - project in duitsland</option> -->
+    </select>
+</div>
+
+<script  type="text/javascript" src="{{ url_for('static', filename='js/virtual-select.min.js') }}"></script>
+<script type="text/javascript">
+    VirtualSelect.init({ 
+        ele: '#multipleSelect' 
+      });
+</script>
+
+
+
+<!-- <form action="" method="get">
+    <div>
+        <label for="batch"></label>
+        <select name="batches" id="batches" multiple>
+            <option value="1"><span>batch 5</span> <span>project in griekenland</span></option>
+            <option value="2">batch 6 - project in nederland</option>
+            <option value="3">batch 7 - project in spanje</option>
+            <option value="4">batch 8 - project in amazone</option>
+            <option value="5">batch 9 - project in duitsland</option>
+        </select>
+    </div>
+</form>
+<script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/js/multi-select-tag.js"></script>
+<script>
+    new MultiSelectTag('batches')  // id
+</script> -->
+
+<!-- <form action="/test" method="get">
+    <select multiple id="mymultiselect" name="mymultiselect">  
+        {% for file in files %}
+            <option value="{{ file }}">{{ file }}</option>
+        {%  endfor %}
+    </select>
+    <input type="submit" value="select">
+</form> -->
+
+<!-- <form id="form1">
+{% for file in files %}
+    
+        <input type="checkbox" name="iets" value="iets">
+        <label>{{file}}</label><br>
+
+{% endfor %}
+    <input type="submit" value="submit">
+</form> -->
+
+
+{% endblock %}

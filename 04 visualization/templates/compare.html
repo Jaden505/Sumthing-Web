@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Compare images</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/virtual-select.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/compare.css') }}">
+{% endblock %}
+
+{% block body %}
+<h1>Compare images</h1>
+
+<div id="compare_images">
+    {% for image in images %}
+    <div id="images">
+        <img class="image" src="{{ image['proof_large1'] }}" alt="image-1">
+        <img class="image" src="{{ image['proof_large2'] }}" alt="image-2">
+    </div>
+
+    <div id="bottom_part">
+        <h2 id="similar_text">Are the images similar?</h2>
+
+        <div id="buttons">
+            <form action="/compare/button_yes/{{ image['key1'] }}" method="post" data-value="{{ images }}">
+                <input class="submit" type="submit" value="Yes">
+            </form>
+             <form action="/compare/button_no/{{ image['key1'] }}" method="post" data-value="{{ images }}">
+                <input class="submit" type="submit" value="No">
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}

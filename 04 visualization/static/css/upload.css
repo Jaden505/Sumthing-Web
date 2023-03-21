@@ -1,0 +1,40 @@
+.upload-container {
+    border: 2px solid;
+    border-radius: 5px;
+    margin: auto;
+    width: 500px;
+    padding: 10px;
+
+	width: fit-content;
+    height: fit-content;
+    background-color: white;
+}
+
+.messages {
+    border: 2px solid;
+    border-radius: 5px;
+    margin: auto;
+    padding: 10px;
+
+	width: fit-content;
+    height: fit-content;
+    background-color: white;
+}
+
+
+.form-section {
+
+}
+
+.files-list {
+    /* padding-bottom: 2px; */
+    padding: 5px;
+    border: #000;
+	border-style:  solid none solid none;
+
+	grid-gap: 13px;
+	display: grid;
+	grid-row: auto;
+    margin-top: 5px;
+	/* background-color: rgb(126, 124, 124) */
+}

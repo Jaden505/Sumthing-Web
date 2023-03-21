@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/upload.css') }}">
+<title>Upload</title>
+{% endblock %}
+
+{% block body %}
+<h1>Upload pagina</h1>
+<div class="upload-container">
+
+    <div class="form-section">
+        <form action="/upload_file" method="post" enctype="multipart/form-data">
+            <input type="file" name="file">
+            <input type="submit" value="Upload">
+        </form>
+    </div>
+    
+    <table class="files-list">
+        <tr>
+            <th>File name</th>
+            <th>Delete File</th>
+        </tr>
+        {% for file in files %}
+            <tr>
+                <td>{{ file }}</td>
+                <td>
+                    <form action="/delete_file/{{ file }}" method="post">
+                        <input type="submit" value="Delete">
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <form action="/process" method="post" style="text-align: center;padding-top:20px;">
+        <input type="submit" value="Process">
+    </form>
+</div>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endwith %}
+
+{% endblock %}

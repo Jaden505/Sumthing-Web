@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Stats</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/virtual-select.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/visualisatie.css') }}">
+{% endblock %}
+
+{% block body %}
+<h1>Stats</h1>
+
+<div class="batch">
+    <label for="">Batches</label><br>
+    <select id="multipleSelect" multiple name="Batches" placeholder="Select Batch"
+        data-silent-initial-value-set="true">
+        {%for batch in files%}
+            <option value="{{batch}}">{{batch}}</option>
+        {%endfor%}
+        <option value="1">batch 5 - project in griekenland</option>
+        <option value="2">batch 6 - project in nederland</option>
+        <option value="3">batch 7 - project in spanje</option>
+        <option value="4">batch 8 - project in amazone</option>
+        <option value="5">batch 9 - project in duitsland</option>
+    </select>
+</div>
+
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/virtual-select.min.js') }}"></script>
+<script type="text/javascript">
+    VirtualSelect.init({
+        ele: '#multipleSelect',
+        search: true,
+        searchGroup: false, // Include group title for searching
+        searchByStartsWith: false, // Search options by startsWith() method 
+    });
+</script>
+
+
+{% endblock %}

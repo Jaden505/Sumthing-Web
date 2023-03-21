@@ -1,0 +1,35 @@
+#compare_images{
+    margin: auto;
+    width: 64%;
+}
+
+.image{
+    width: 45%;
+    height: 45%;
+    margin: 20px;
+    float: left;
+}
+
+#bottom_part{
+    clear: both;
+    margin: auto;
+    width: 50%;
+}
+
+.submit{
+    width: 100%;
+    margin: 2px;
+}
+
+#buttons{
+    margin: auto;
+    width: 25%;
+}
+
+
+
+#similar_text{
+    margin:auto;
+    width: 50%;
+    padding-bottom: 10px;
+}

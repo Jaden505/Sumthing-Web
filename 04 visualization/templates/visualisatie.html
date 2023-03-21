@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Visualisatie</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/virtual-select.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/visualisatie.css') }}">
+{% endblock %}
+
+{% block body %}
+<h1>Visualisatie {{header}}</h1>
+
+<div class="map-container">
+    <div class="batch">
+        <h3>Batches</h3>
+        <form action="/visualisatie/map" method="get">
+            <select class="multipleSelect" id="multipleSelect" multiple name="batches" placeholder="Select Batch"
+                data-silent-initial-value-set="true">
+                {%for batch in files%}
+                <option value="{{batch}}">{{batch}}</option>
+                {%endfor%}
+                <!-- <option value="1">batch 5 - project in griekenland</option>
+                <option value="2">batch 6 - project in nederland</option>
+                <option value="3">batch 7 - project in spanje</option>
+                <option value="4">batch 8 - project in amazone</option>
+                <option value="5">batch 9 - project in duitsland</option> -->
+            </select>
+            <input type="submit" value="Select">
+        </form>
+    </div>
+
+    <div class="metadata">
+        <h3>Metadata selected batches</h3>
+        <div class="tabs">
+            {% if metadata %}
+            {%for metadata_batch in metadata %}
+            <input class="input" name="tabs" type="radio" id="{{ metadata_batch }}" checked='checked' />
+            <label class="label" for="{{ metadata_batch }}">{{ metadata_batch }}</label>
+            <div class="panel">
+                <!-- <h1>{{ metadata[metadata_batch] }}</h1> -->
+                <p>center: {{ metadata[metadata_batch]['center_lat'] }}/{{ metadata[metadata_batch]['center_long'] }}
+                </p>
+                <p>first picture in batch: {{ metadata[metadata_batch]['first_photo_upload'] }}</p>
+                <p>last picture in batch: {{metadata[metadata_batch]['last_photo_upload'] }}</p>
+                <div class="images-section">
+                    {% for img_url in metadata[metadata_batch]['url'] %}
+                    <div class="hoverwrap">
+                        <a href="https://sumtingtest.s3.eu-central-1.amazonaws.com/{{img_url[0]}}"> <!--! moet aangepast worden als aws bucket anders wordt ingericht -->
+                            <img src="{{img_url[1]}}" alt="{{img_url[0]}}">
+                            <div class="hovercap">{{img_url[0]}}</div>
+                        </a>
+                      </div>
+                    {%endfor%}
+                </div>
+            </div>
+            {%endfor%}
+            {% else %}
+            <h2>select batch</h2>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="map-div">
+        <h3>Map</h3>
+        {% if graphJSON %}
+        <div id="map" class="map"></div>
+        {% else %}
+        <p>select batch</p>
+        {% endif %}
+    </div>
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/virtual-select.min.js') }}"></script>
+<script type="text/javascript">
+    var graphs = {{ graphJSON | safe}};
+    Plotly.plot('map', graphs, {});
+</script>
+
+<script type="text/javascript">
+    VirtualSelect.init({
+        ele: '#multipleSelect',
+        // Maximum width
+        maxWidth: '50%',
+        search: true,
+        searchGroup: false, // Include group title for searching
+        searchByStartsWith: false, // Search options by startsWith() method 
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i');
+@import url('https://fonts.googleapis.com/css?family=Bree+Serif');
+
+
+.metadata .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    background: #e5e5e5;
+    /* box-shadow: 0 48px 80px -32px rgba(0, 0, 0, 0.3); */
+}
+
+.metadata .input {
+    position: absolute;
+    opacity: 0;
+}
+
+.metadata .label {
+    width: 100%;
+    padding: 20px 30px;
+    background: #e5e5e5;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 18px;
+    color: #7f7f7f;
+    transition: background 0.1s, color 0.1s;
+}
+
+.metadata .label:hover {
+    background: #d8d8d8;
+}
+
+.metadata .label:active {
+    background: #ccc;
+}
+
+.metadata .input:focus+.label {
+    z-index: 1;
+}
+
+.metadata .input:checked+.label {
+    background: #fff;
+    color: #000;
+}
+
+@media (min-width: 600px) {
+    .metadata .label {
+        width: auto;
+    }
+}
+
+.metadata .panel {
+    display: none;
+    padding: 20px 30px 30px;
+    width: 100%;
+    background: #fff;
+}
+
+@media (min-width: 600px) {
+    .metadata .panel {
+        order: 99;
+    }
+}
+
+.metadata .input:checked+.label+.panel {
+    display: block;
+}
+
+.map-container {
+    height: 90%;
+}
+
+.map-container h3{
+    text-align: center;
+    border-bottom: 1px solid black;
+}
+
+.batch {
+    text-align: center;
+    /* background-color: aqua; */
+    width: 49%;
+    height: 15%;
+    float: left;
+    position: relative;
+    margin-bottom: 1.2rem;
+}
+
+.map-div {
+    /* background-color: blue; */
+    width: 49%;
+    height: 75%;
+    float: left;
+    position: relative;
+}
+
+.map-div .map {
+    height: 100%;
+}
+
+.metadata {
+    width: 49%;
+    /* background-color: red; */
+    float: right;
+    position: relative;
+    height: 100%;
+}
+
+.images-section {
+    padding:5px;
+    float:left;
+    text-align:center;
+    height: 500px;
+    overflow-y: scroll;
+    width: 100%;
+}
+
+.hoverwrap {
+    position: relative; /* required for (c2) */
+    float: left;
+    margin: 5px;
+    text-align: center;
+}
+
+/* (B) RESPONSIVE IMAGE */
+.hoverwrap img { width: 100%; }
+
+/* (C) CAPTION */
+.hovercap {
+/* (C1) DIMENSIONS */
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+
+/* (C2) PLACE AT BOTTOM */
+    position: absolute;
+    bottom: 0; left: 0;
+
+/* (C3) COLORS */
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+}
+
+/* (D) SHOW/HIDE */
+.hovercap {
+    visibility: none; opacity: 0;
+    transition: opacity 0.3s;
+}
+.hoverwrap:hover .hovercap {
+    visibility: visible; opacity: 1;
+}
