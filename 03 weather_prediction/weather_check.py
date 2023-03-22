@@ -26,9 +26,9 @@ def get_weather_data(path):
     model = tf.keras.models.load_model(path_for_save)
 
     for i in range(8):
-        img_lat = # get from db
-        img_lon = # get from db
-        img_datetime = # get from db
+        img_lat = None# get from db
+        img_lon = None# get from db
+        img_datetime = None# get from db
         date_hour = int(round((img_datetime.hour / 3), 0))
     
         weather_check_desc.append(str(weather_check(img_lat, img_lon, img_datetime, i)).lower())
