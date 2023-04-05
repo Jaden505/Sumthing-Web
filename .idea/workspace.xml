@@ -5,10 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="39edea4b-8277-47ca-a3c8-b2505b3f1caa" name="Changes" comment="">
+<<<<<<< HEAD
       <change afterPath="$PROJECT_DIR$/02 check_duplicates/deviation_check.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sumting-1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sumting-1.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01 extract_upload_AWS/convert_to_jpg.py" beforeDir="false" afterPath="$PROJECT_DIR$/01 extract_upload_AWS/convert_to_jpg.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01 extract_upload_AWS/db_CRUD.py" beforeDir="false" afterPath="$PROJECT_DIR$/01 extract_upload_AWS/db_CRUD.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01 extract_upload_AWS/helper_batch.py" beforeDir="false" afterPath="$PROJECT_DIR$/01 extract_upload_AWS/helper_batch.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01 extract_upload_AWS/helper_img_metadata.py" beforeDir="false" afterPath="$PROJECT_DIR$/01 extract_upload_AWS/helper_img_metadata.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01 extract_upload_AWS/helper_img_to_aws.py" beforeDir="false" afterPath="$PROJECT_DIR$/01 extract_upload_AWS/helper_img_to_aws.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01 extract_upload_AWS/img_to_AWS_to_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/01 extract_upload_AWS/img_to_AWS_to_db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01 extract_upload_AWS/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/01 extract_upload_AWS/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/02 check_duplicates/db_CRUD.py" beforeDir="false" afterPath="$PROJECT_DIR$/02 check_duplicates/db_CRUD.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/02 check_duplicates/duplicate_check_CNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/02 check_duplicates/duplicate_check_CNN.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/03 weather_prediction/convert_to_jpg.py" beforeDir="false" afterPath="$PROJECT_DIR$/03 weather_prediction/convert_to_jpg.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/03 weather_prediction/db_CRUD.py" beforeDir="false" afterPath="$PROJECT_DIR$/03 weather_prediction/db_CRUD.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/03 weather_prediction/weather_API.py" beforeDir="false" afterPath="$PROJECT_DIR$/03 weather_prediction/weather_API.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/03 weather_prediction/weather_CNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/03 weather_prediction/weather_CNN.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/03 weather_prediction/weather_check.py" beforeDir="false" afterPath="$PROJECT_DIR$/03 weather_prediction/weather_check.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/04 visualization/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/04 visualization/app.py" afterDir="false" />
+>>>>>>> 00f8b40 (Removed unused imports in all files)
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +62,10 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+<<<<<<< HEAD
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+=======
+>>>>>>> 00f8b40 (Removed unused imports in all files)
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -54,8 +76,13 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+<<<<<<< HEAD
   <component name="RunManager">
     <configuration name="deviation_check" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+=======
+  <component name="RunManager" selected="Python.weather_check">
+    <configuration name="main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+>>>>>>> 00f8b40 (Removed unused imports in all files)
       <module name="sumting-1" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -68,7 +95,77 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+<<<<<<< HEAD
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/02 check_duplicates/deviation_check.py" />
+=======
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/02 check_duplicates/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="sumting-1" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/01 extract_upload_AWS" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/01 extract_upload_AWS/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="weather_API" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="sumting-1" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/03 weather_prediction" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/03 weather_prediction/weather_API.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="weather_check" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="sumting-1" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/03 weather_prediction" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/03 weather_prediction/weather_check.py" />
+>>>>>>> 00f8b40 (Removed unused imports in all files)
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -79,7 +176,14 @@
     </configuration>
     <recent_temporary>
       <list>
+<<<<<<< HEAD
         <item itemvalue="Python.deviation_check" />
+=======
+        <item itemvalue="Python.weather_check" />
+        <item itemvalue="Python.weather_API" />
+        <item itemvalue="Python.main (1)" />
+        <item itemvalue="Python.main" />
+>>>>>>> 00f8b40 (Removed unused imports in all files)
       </list>
     </recent_temporary>
   </component>
@@ -91,10 +195,22 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1679474498674</updated>
+<<<<<<< HEAD
       <workItem from="1679474510883" duration="908000" />
       <workItem from="1680268087011" duration="123000" />
       <workItem from="1680353939390" duration="18000" />
       <workItem from="1680355300287" duration="3289000" />
+=======
+      <workItem from="1679474510883" duration="1893000" />
+      <workItem from="1679477968347" duration="824000" />
+      <workItem from="1679482496263" duration="256000" />
+      <workItem from="1679483224413" duration="1951000" />
+      <workItem from="1680076147445" duration="1365000" />
+      <workItem from="1680084542769" duration="66000" />
+      <workItem from="1680172521997" duration="472000" />
+      <workItem from="1680683402572" duration="83000" />
+      <workItem from="1680687725376" duration="279000" />
+>>>>>>> 00f8b40 (Removed unused imports in all files)
     </task>
     <servers />
   </component>
@@ -116,7 +232,14 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+<<<<<<< HEAD
     <SUITE FILE_PATH="coverage/sumting_1$deviation_check.coverage" NAME="deviation_check Coverage Results" MODIFIED="1680357508947" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/02 check_duplicates" />
     <SUITE FILE_PATH="coverage/sumting_1$app.coverage" NAME="app Coverage Results" MODIFIED="1679423074412" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/04 visualization" />
+=======
+    <SUITE FILE_PATH="coverage/Sumting1$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1679478745811" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/02 check_duplicates" />
+    <SUITE FILE_PATH="coverage/Sumting1$weather_API.coverage" NAME="weather_API Coverage Results" MODIFIED="1680076233715" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/03 weather_prediction" />
+    <SUITE FILE_PATH="coverage/Sumting1$main.coverage" NAME="main Coverage Results" MODIFIED="1679478531251" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/01 extract_upload_AWS" />
+    <SUITE FILE_PATH="coverage/Sumting1$weather_check.coverage" NAME="weather_check Coverage Results" MODIFIED="1680683473575" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/03 weather_prediction" />
+>>>>>>> 00f8b40 (Removed unused imports in all files)
   </component>
 </project>

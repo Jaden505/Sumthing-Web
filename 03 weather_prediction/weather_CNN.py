@@ -5,11 +5,10 @@ import cv2
 import numpy as np
 import pandas as pd
 from keras.callbacks import EarlyStopping, ModelCheckpoint
-from keras.layers import Dense, Conv2D, Flatten, MaxPool2D, MaxPooling2D
+from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D
 from keras.models import Sequential
 from keras.optimizers import Adam
-from keras.wrappers.scikit_learn import KerasClassifier
-from sklearn.model_selection import train_test_split, RandomizedSearchCV, KFold
+from sklearn.model_selection import train_test_split
 from matplotlib import pyplot as plt
 import tensorflow as tf
 

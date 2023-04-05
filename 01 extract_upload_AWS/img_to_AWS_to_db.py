@@ -9,8 +9,6 @@ from db_ORM import AllImage
 import datetime as dt
 
 
-
-
 # Extract metadata from image
 def get_image_metadata(filename):
     dict={}

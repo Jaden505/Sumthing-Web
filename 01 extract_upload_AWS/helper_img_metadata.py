@@ -1,6 +1,5 @@
 # https://gist.github.com/erans/983821
 
-from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
 
 # Conversion latitude longitude

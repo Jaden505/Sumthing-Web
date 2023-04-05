@@ -1,11 +1,4 @@
-from PIL.ExifTags import TAGS
-from PIL import Image
 import requests
-import psycopg2
-import os
-import time
-
-
 
 
 def get_weather_data(lat_long, date):

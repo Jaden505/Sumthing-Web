@@ -1,13 +1,12 @@
-import psycopg2
 from sqlalchemy import create_engine
-from sqlalchemy import delete,text,insert,update
+from sqlalchemy import delete,insert,update
 from sqlalchemy.orm import sessionmaker
-from db_ORM import Base, AllImage, WeatherData
+from db_ORM import Base, WeatherData
 import dotenv
 import os
 
 
-from db_ORM import Batch, AllImage
+from db_ORM import AllImage
 
 dotenv.load_dotenv()
 url = os.environ['DATABASE_TO_URI']
