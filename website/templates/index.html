@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <img class="logo" src="{{ url_for('static', filename='logo.webp') }}" alt="Logo">
+        <nav class="nav">
+            <span class="nav-item">Individual</span>
+            <span class="nav-item">Business</span>
+            <span class="nav-item">Project</span>
+            <span class="nav-item">Impact</span>
+            <span class="nav-item selected">Pictures</span>
+            <span class="nav-item">Contribute Now</span>
+        </nav>
+    </header>
+    <div class="image-details">
+        <img id="selected-image" src="{{ url_for('static', filename='images/' + images[0]) }}" alt="{{ images[0] }}">
+        <div class="image-info">
+            <div>Date: <span id="image-date">2023-03-29</span></div>
+            <div>Coordinates: <span id="image-coordinates">40.7128° N, 74.0060° W</span>
+                <img class="maps-icon" src="{{ url_for('static', filename='map.png') }}" alt="Google Maps"></div>
+            <div>Contributor: <span id="image-camera">Randy Marsh</span></div>
+        </div>
+    </div>
+    <div class="thumbnails" onwheel="handleScroll(event)">
+        {% for image in images %}
+            <img class="thumbnail" src="{{ url_for('static', filename='images/' + image) }}" alt="{{ image }}" onclick="updateSelectedImage(this)">
+        {% endfor %}
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
