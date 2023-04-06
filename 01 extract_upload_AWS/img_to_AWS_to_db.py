@@ -1,4 +1,4 @@
-import os
+import os, re
 import pandas as pd
 from PIL import Image
 
@@ -7,22 +7,22 @@ from helper_img_to_aws import upload_image_to_aws
 from convert_to_jpg import resizer
 from db_ORM import AllImage
 import datetime as dt
-
+import psycopg2
 
 # Extract metadata from image
 def get_image_metadata(filename):
     dict={}
     # filename
-    dict['proof_name']=filename
+    dict['proof_image_name'] = filename
     # batch_id
-    batch_id=filename.split('_',1)[0]
-    dict['batch_key']=batch_id
+    batch_id = int(re.search(r'\d{4}', filename).group())
+    dict['batch_key'] = batch_id
 
-    img=Image.open(filename)
+    img = Image.open(os.path.join(image_dir, filename))
     exif_data = get_exif_data(img)
     
     # img datetime
-    exif_datetime=get_datetime(exif_data)
+    exif_datetime = get_datetime(exif_data)
     datetime = dt.datetime.strptime(exif_datetime, '%Y:%m:%d %H:%M:%S')
     dict['proof_date'] = datetime
     
@@ -63,7 +63,7 @@ def upload_image_extract_metadata_all(dirname, ACCESS_KEY, SECRET_KEY, bucketnam
                             dict[f'proof{size}'] = url
 
                     picture_info = AllImage(
-                        proof_image_name=dict['proof_name'],
+                        proof_image_name=dict['proof_image_name'],
                         proof_date=dict['proof_date'],
                         latitude=dict['latitude'],
                         longitude=dict['longitude'],
@@ -80,3 +80,47 @@ def upload_image_extract_metadata_all(dirname, ACCESS_KEY, SECRET_KEY, bucketnam
     return ls_image
 
 os.getcwd()
+
+image_dir = '../Pictures/trees/'
+
+# Connect to the Postgres database
+conn = psycopg2.connect(
+    host="localhost",
+    database="postgres",
+    user="",
+    password=""
+)
+cur = conn.cursor()
+
+
+# Loop through each file in the directory
+for filename in os.listdir(image_dir):
+    # Get the full path to the image file
+    filepath = os.path.join(image_dir, filename)
+
+    # Get the metadata for this image
+    metadata = get_image_metadata(filename)
+
+    # Insert into batch table
+    batch_id = int(re.search(r'\d{4}', filename).group())
+    cur.execute("INSERT INTO batch (batch_key) VALUES (%s)", (batch_id,))
+
+    # Construct the SQL query to insert the metadata into the database
+    query = "INSERT INTO proof ("
+    columns = []
+    values = []
+    for key, value in metadata.items():
+        columns.append(key)
+        values.append(str(value))
+    query += ", ".join(columns) + ") VALUES ("
+    query += ", ".join(["%s" for _ in range(len(values))]) + ")"
+
+    # Execute the SQL query to insert the metadata into the database
+    cur.execute(query, tuple(values))
+
+    # Commit the changes to the database
+    conn.commit()
+
+# Close the database connection
+cur.close()
+conn.close()

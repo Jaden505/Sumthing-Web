@@ -9,8 +9,13 @@ import os
 
 from db_ORM import Batch, AllImage
 
-dotenv.load_dotenv()
-url = os.environ['DATABASE_TO_URI']
+user = ''
+password = ''
+host = 'localhost'
+port = '5432'
+database = 'postgres@localhost'
+
+url = f'postgresql://{user}:{password}@{host}:{port}/{database}'
 
 def connect_database(url):
     try:
@@ -117,3 +122,4 @@ def drop_lz_image_proof(engine):
 def log_zip_images(df_zip, engine):
     df_zip.to_sql(name='log_zip_images', con=engine, if_exists='append', index=False)
     return None  
+

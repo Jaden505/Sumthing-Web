@@ -1,10 +1,7 @@
-from upload_images_extract_metadata import get_image_metadata
+from img_to_AWS_to_db import get_image_metadata
 import datetime as dt
 
 import os
-
-
-
 
 
 def get_first_last_date_from_batch(ls_zip_name):
