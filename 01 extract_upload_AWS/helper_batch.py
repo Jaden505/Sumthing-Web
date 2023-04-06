@@ -1,5 +1,3 @@
-import psycopg2
-import pandas as pd
 from upload_images_extract_metadata import get_image_metadata
 import datetime as dt
 

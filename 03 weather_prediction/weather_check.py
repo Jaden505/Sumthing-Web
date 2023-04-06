@@ -2,7 +2,6 @@ import datetime as dt
 import os
 
 import cv2
-import imageio as iio
 import numpy as np
 import requests
 import tensorflow as tf

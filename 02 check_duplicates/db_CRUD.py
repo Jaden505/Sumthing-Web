@@ -1,6 +1,5 @@
-import psycopg2
 from sqlalchemy import create_engine
-from sqlalchemy import delete,text,insert,update
+from sqlalchemy import delete,update
 from sqlalchemy.orm import sessionmaker
 from db_ORM import Base
 import dotenv

@@ -1,5 +1,3 @@
-# importing the required package
-
 from PIL import Image
 import os
 

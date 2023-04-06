@@ -1,4 +1,3 @@
-import psycopg2
 from sqlalchemy import create_engine
 from sqlalchemy import delete,text,insert 
 from sqlalchemy.orm import sessionmaker

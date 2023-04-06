@@ -1,8 +1,6 @@
 import os
 import dotenv
-from sqlalchemy import create_engine
 
-from convert_to_jpg import convert_png_to_jpg
 from helper_img import extract_all, rename_all, clean_up
 from img_to_AWS_to_db import upload_image_extract_metadata_all
 from db_CRUD import insert_all_images, insert_batches_to_db

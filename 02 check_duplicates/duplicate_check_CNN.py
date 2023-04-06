@@ -1,7 +1,4 @@
-from PIL import Image
 from imagededup.methods import CNN
-
-import os
 
 from db_CRUD import update_image_score
 

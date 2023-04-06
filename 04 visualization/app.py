@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect, Response, flash
+from flask import Flask, render_template, request, redirect
 from flask import flash # messages op html pagina https://www.youtube.com/watch?v=T1PLBEEZU8o 
 from flask_navigation import Navigation
 from werkzeug.utils import secure_filename
@@ -8,8 +8,6 @@ import pandas as pd
 import json
 
 import plotly
-import plotly.express as px
-import plotly.graph_objects as go
 
 from helper_visualisation import plot_map, plotbar
 from db_READ import select_lat_lon, select_batches, select_all_comparable_image
