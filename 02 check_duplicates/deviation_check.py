@@ -2,8 +2,9 @@ import os
 from imagededup.methods import CNN
 
 # Set the path for your images directories
-plastic_dir = '/Users/ayoubezzaouia/Downloads/Pictures/plastic/Batch 1'
-tree_dir = '/Users/ayoubezzaouia/Downloads/Pictures/trees'
+# Using local paths temporary
+plastic_dir = r'/Users/ayoubezzaouia/Downloads/Pictures/plastic/Batch 1'
+tree_dir = r'/Users/ayoubezzaouia/Downloads/Pictures/trees'
 
 # Set the similarity threshold for identifying duplicates
 threshold = 0.7
