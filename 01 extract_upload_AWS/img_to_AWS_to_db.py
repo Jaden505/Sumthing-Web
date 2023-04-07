@@ -10,15 +10,17 @@ import datetime as dt
 import psycopg2
 
 # Extract metadata from image
-def get_image_metadata(filename):
+def get_image_metadata(filepath):
+    filename = os.path.basename(filepath)
+
     dict={}
     # filename
     dict['proof_image_name'] = filename
     # batch_id
-    batch_id = int(re.search(r'\d{4}', filename).group())
+    batch_id = int(re.search(r'\d+', filename).group())
     dict['batch_key'] = batch_id
 
-    img = Image.open(os.path.join(image_dir, filename))
+    img = Image.open(filepath)
     exif_data = get_exif_data(img)
     
     # img datetime
@@ -30,6 +32,8 @@ def get_image_metadata(filename):
     lat, lon =get_lat_lon(exif_data)
     dict['latitude']=lat
     dict['longitude']=lon
+
+    print(lat, lon, datetime, filename, batch_id)
 
     return dict
 
@@ -80,47 +84,3 @@ def upload_image_extract_metadata_all(dirname, ACCESS_KEY, SECRET_KEY, bucketnam
     return ls_image
 
 os.getcwd()
-
-image_dir = '../Pictures/trees/'
-
-# Connect to the Postgres database
-conn = psycopg2.connect(
-    host="localhost",
-    database="postgres",
-    user="",
-    password=""
-)
-cur = conn.cursor()
-
-
-# Loop through each file in the directory
-for filename in os.listdir(image_dir):
-    # Get the full path to the image file
-    filepath = os.path.join(image_dir, filename)
-
-    # Get the metadata for this image
-    metadata = get_image_metadata(filename)
-
-    # Insert into batch table
-    batch_id = int(re.search(r'\d{4}', filename).group())
-    cur.execute("INSERT INTO batch (batch_key) VALUES (%s)", (batch_id,))
-
-    # Construct the SQL query to insert the metadata into the database
-    query = "INSERT INTO proof ("
-    columns = []
-    values = []
-    for key, value in metadata.items():
-        columns.append(key)
-        values.append(str(value))
-    query += ", ".join(columns) + ") VALUES ("
-    query += ", ".join(["%s" for _ in range(len(values))]) + ")"
-
-    # Execute the SQL query to insert the metadata into the database
-    cur.execute(query, tuple(values))
-
-    # Commit the changes to the database
-    conn.commit()
-
-# Close the database connection
-cur.close()
-conn.close()
