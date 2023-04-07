@@ -1,41 +1,48 @@
 from img_to_AWS_to_db import get_image_metadata
-import psycopg2, os
+from helper_batch import get_first_last_date_from_batch, get_center_of_batch
+
+import psycopg2
+import os
 
 
-def images_from_dir_to_db(image_dir):
-    # Loop through each file in the directory
+def batch_to_db(batch_name):
+    cur.execute("INSERT INTO batch (batch_name) VALUES (%s) RETURNING batch_key", (batch_name,))
+    batch_key = cur.fetchone()[0]
+
+    first_datetime, last_datetime = get_first_last_date_from_batch(batch_name, batch_key)
+    center_lon, center_lat = get_center_of_batch(batch_name, batch_key)
+
+    # Insert batch key into the batch table
+    insert_batch_query = "INSERT INTO batch (batch_name, center_long, center_lat, " \
+                         "first_photo_upload, last_photo_upload) VALUES (%s, %s, %s, %s, %s)"
+    execute_query(insert_batch_query, tuple([batch_name, center_lon,
+                  center_lat, first_datetime, last_datetime]))
+
+    conn.commit()
+
+    return batch_key
+
+
+def metadata_to_db(image_dir, batch_key):
     for filename in os.listdir(image_dir):
         filepath = os.path.join(image_dir, filename)
 
-        try:
-            metadata = get_image_metadata(filepath)
-        except:
-            print(f"Error extracting metadata from {filename}")
-            continue
+        metadata = get_image_metadata(filepath, batch_key)
 
-        batch_key = metadata['batch_key']
+        # Insert metadata into the proof table
+        columns = ", ".join(metadata.keys())
+        values = tuple(metadata.values())
+        placeholders = ", ".join(["%s" for _ in range(len(values))])
 
-        insert = insert_query("INSERT INTO batch (batch_key) VALUES (%s)", (batch_key,))
-        if not insert:
-            print(f"Batch {batch_key} already exists")
-            continue
+        insert_proof_query = f"INSERT INTO proof ({columns}) VALUES ({placeholders})"
+        proof_insert_success = execute_query(insert_proof_query, values)
 
-        query = "INSERT INTO proof ("
-        columns = []
-        values = []
-        for key, value in metadata.items():
-            columns.append(key)
-            values.append(str(value))
-        query += ", ".join(columns) + ") VALUES ("
-        query += ", ".join(["%s" for _ in range(len(values))]) + ")"
-
-        insert = insert_query(query, tuple(values))
-        if not insert:
+        if not proof_insert_success:
             print(f"Image {filename} already exists")
             continue
 
 
-def insert_query(query, values):
+def execute_query(query, values):
     try:
         cur.execute(query, tuple(values))
         conn.commit()
@@ -44,6 +51,7 @@ def insert_query(query, values):
         return False
 
     return True
+
 
 if __name__ == "__main__":
     # Initialise the database connection
@@ -55,8 +63,11 @@ if __name__ == "__main__":
     )
     cur = conn.cursor()
 
-    images_from_dir_to_db('../Pictures/plastic/Batch 1')
-    images_from_dir_to_db('../Pictures/trees')
+    plastic_key = batch_to_db('../Pictures/plastic/Batch 1')
+    trees_key = batch_to_db('../Pictures/trees')
+
+    metadata_to_db('../Pictures/plastic/Batch 1', plastic_key)
+    metadata_to_db('../Pictures/trees', trees_key)
 
     # Close the database connection
     cur.close()

@@ -4,18 +4,13 @@ import datetime as dt
 import os
 
 
-def get_first_last_date_from_batch(ls_zip_name):
-    cwd = os.getcwd()
-    d = os.path.join(cwd, 'zipimages', ls_zip_name)
-
+def get_first_last_date_from_batch(dir_name, batch_id):
     last_datetime = dt.datetime(1900, 1, 1)
     first_datetime = dt.datetime.now()
 
-
-
-    for file in os.listdir(os.path.join(os.getcwd(), 'zipimages', ls_zip_name)):
-        path = os.path.join(d, file)
-        date = get_image_metadata(path)['proof_date']
+    for file in os.listdir(dir_name):
+        path = os.path.join(dir_name, file)
+        date = get_image_metadata(path, batch_id)['proof_date']
 
         if date > last_datetime:
             last_datetime = date
@@ -28,17 +23,14 @@ def get_first_last_date_from_batch(ls_zip_name):
     return first_datetime, last_datetime
 
 
-def get_center_of_batch(ls_zip_name):
-    cwd = os.getcwd()
-    d = os.path.join(cwd, 'zipimages', ls_zip_name)
-
+def get_center_of_batch(dir_name, batch_id):
     total_lon = 0
     total_lat = 0
     count = 0
 
-    for index, file in enumerate(os.listdir(os.path.join(os.getcwd(), 'zipimages', ls_zip_name))):
-        path = os.path.join(d, file)
-        metadata = get_image_metadata(path)
+    for index, file in enumerate(os.listdir(dir_name)):
+        path = os.path.join(dir_name, file)
+        metadata = get_image_metadata(path, batch_id)
 
         total_lon += metadata['longitude']
         total_lat += metadata['latitude']
