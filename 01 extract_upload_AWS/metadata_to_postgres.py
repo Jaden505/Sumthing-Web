@@ -13,10 +13,10 @@ def batch_to_db(batch_name):
     center_lon, center_lat = get_center_of_batch(batch_name, batch_key)
 
     # Insert batch key into the batch table
-    insert_batch_query = "INSERT INTO batch (batch_name, center_long, center_lat, " \
-                         "first_photo_upload, last_photo_upload) VALUES (%s, %s, %s, %s, %s)"
+    insert_batch_query = "UPDATE batch SET batch_name = %s, center_long = %s, center_lat = %s, " \
+                         "first_photo_upload = %s, last_photo_upload = %s WHERE batch_key = %s"
     execute_query(insert_batch_query, tuple([batch_name, center_lon,
-                  center_lat, first_datetime, last_datetime]))
+                  center_lat, first_datetime, last_datetime, batch_key]))
 
     conn.commit()
 
@@ -64,9 +64,9 @@ if __name__ == "__main__":
     cur = conn.cursor()
 
     plastic_key = batch_to_db('../Pictures/plastic/Batch 1')
-    trees_key = batch_to_db('../Pictures/trees')
-
     metadata_to_db('../Pictures/plastic/Batch 1', plastic_key)
+
+    trees_key = batch_to_db('../Pictures/trees')
     metadata_to_db('../Pictures/trees', trees_key)
 
     # Close the database connection
