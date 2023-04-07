@@ -1,4 +1,4 @@
-import os
+import os, re
 import pandas as pd
 from PIL import Image
 
@@ -7,22 +7,24 @@ from helper_img_to_aws import upload_image_to_aws
 from convert_to_jpg import resizer
 from db_ORM import AllImage
 import datetime as dt
-
+import psycopg2
 
 # Extract metadata from image
-def get_image_metadata(filename):
+def get_image_metadata(filepath):
+    filename = os.path.basename(filepath)
+
     dict={}
     # filename
-    dict['proof_name']=filename
+    dict['proof_image_name'] = filename
     # batch_id
-    batch_id=filename.split('_',1)[0]
-    dict['batch_key']=batch_id
+    batch_id = int(re.search(r'\d+', filename).group())
+    dict['batch_key'] = batch_id
 
-    img=Image.open(filename)
+    img = Image.open(filepath)
     exif_data = get_exif_data(img)
     
     # img datetime
-    exif_datetime=get_datetime(exif_data)
+    exif_datetime = get_datetime(exif_data)
     datetime = dt.datetime.strptime(exif_datetime, '%Y:%m:%d %H:%M:%S')
     dict['proof_date'] = datetime
     
@@ -30,6 +32,8 @@ def get_image_metadata(filename):
     lat, lon =get_lat_lon(exif_data)
     dict['latitude']=lat
     dict['longitude']=lon
+
+    print(lat, lon, datetime, filename, batch_id)
 
     return dict
 
@@ -63,7 +67,7 @@ def upload_image_extract_metadata_all(dirname, ACCESS_KEY, SECRET_KEY, bucketnam
                             dict[f'proof{size}'] = url
 
                     picture_info = AllImage(
-                        proof_image_name=dict['proof_name'],
+                        proof_image_name=dict['proof_image_name'],
                         proof_date=dict['proof_date'],
                         latitude=dict['latitude'],
                         longitude=dict['longitude'],
