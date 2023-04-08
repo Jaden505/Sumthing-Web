@@ -20,6 +20,7 @@ def find_corrupted(dir):
             print("found corrupt file: ", image)
     return invalid_files
 
+
 def get_hash(img_path):
     # This function will return the md5 checksum for any input image.
     with open(img_path, "rb") as f:

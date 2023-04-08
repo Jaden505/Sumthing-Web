@@ -9,7 +9,7 @@ import os
 from db_ORM import Batch, AllImage
 
 dotenv.load_dotenv()
-url = os.environ['DATABASE_TO_URI']
+url = 'postgres@localhost:5432'
 
 def connect_database(url):
     try:
