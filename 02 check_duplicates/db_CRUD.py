@@ -9,8 +9,14 @@ import os
 from db_ORM import Batch, AllImage
 
 dotenv.load_dotenv()
-url = 'postgresql://@localhost:5432/postgres'
 
+user = ''
+password = ''
+host = 'localhost'
+port = '5432'
+database = 'postgres@localhost'
+
+url = f'postgresql://{user}:{password}@{host}:{port}/{database}'
 
 def connect_database(url):
     try:
@@ -83,7 +89,7 @@ def update_image_score(image_name, score, index):
     :return: Updates correct line in database to show new score
     """
     score = float(score)
-    list = [(
+    updates = [(
         update(AllImage).
         where(AllImage.proof_image_name == image_name).
         values(score_tree_not_tree=score)
@@ -109,6 +115,6 @@ def update_image_score(image_name, score, index):
         values(score_total=score)
     )]
 
-    stmt = list[index - 1]
+    stmt = updates[index - 1]
 
     conn.execute(stmt)

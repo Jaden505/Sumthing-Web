@@ -19,7 +19,7 @@ url = f'postgresql://{user}:{password}@{host}:{port}/{database}'
 
 def connect_database(url):
     try:
-        engine = create_engine(url, echo = False) #echo=True
+        engine = create_engine(url)
         conn = engine.connect()
         return engine, conn
 
@@ -121,5 +121,4 @@ def drop_lz_image_proof(engine):
   
 def log_zip_images(df_zip, engine):
     df_zip.to_sql(name='log_zip_images', con=engine, if_exists='append', index=False)
-    return None  
-
+    return None

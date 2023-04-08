@@ -73,7 +73,3 @@ def get_datetime(exif_data):
 
     datetime=exif_data["DateTime"]
     return datetime
-
-
-
-

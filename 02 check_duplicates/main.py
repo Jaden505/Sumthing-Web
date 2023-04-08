@@ -35,7 +35,7 @@ def main(dirname):
             duplicate_check_CNN(path, 0.85)
 
     # Remove all files from folder
-    clean_up(dirname)
+    # clean_up(dirname)
 
 
-main('../Pictures')
+main('../Pictures/plastic')

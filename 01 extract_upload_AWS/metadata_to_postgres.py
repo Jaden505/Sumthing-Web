@@ -3,12 +3,13 @@ import sqlalchemy as db
 from img_to_AWS_to_db import get_image_metadata
 from helper_batch import get_first_last_date_from_batch, get_center_of_batch
 from db_CRUD import connect_database, create_tables
+from db_ORM import Batch, AllImage
 
 engine, conn = connect_database('postgresql://@localhost:5432/postgres')
 create_tables(engine)
 
-batch = db.Table('batch', db.MetaData(), autoload_with=engine)
-proof = db.Table('proof', db.MetaData(), autoload_with=engine)
+batch = Batch.__table__
+images = AllImage.__table__
 
 
 def batch_to_db(batch_name):
@@ -27,6 +28,7 @@ def batch_to_db(batch_name):
         batch_name=batch_name
     )
     conn.execute(ins)
+    conn.commit()
 
     return batch_key
 
@@ -38,7 +40,7 @@ def metadata_to_db(image_dir, batch_key):
         metadata = get_image_metadata(filepath, batch_key)
 
         # Insert metadata into the proof table
-        ins = proof.insert().values(
+        ins = images.insert().values(
             proof_image_name=filename,
             batch_key=batch_key,
             proof_date=metadata['proof_date'],
@@ -47,6 +49,7 @@ def metadata_to_db(image_dir, batch_key):
         )
         try:
             conn.execute(ins)
+            conn.commit()
         except db.exc.IntegrityError:
             print(f"Image {filename} already exists")
             continue
