@@ -9,7 +9,7 @@ from helper_images import clean_up
 dotenv.load_dotenv()
 
 # postgres database
-DATABASE_TO_URI = 'postgres@localhost:5432'
+DATABASE_TO_URI = 'postgresql://@localhost:5432/postgres'
 
 
 # aws image bucket
@@ -35,7 +35,7 @@ def main(dirname):
             duplicate_check_CNN(path, 0.85)
 
     # Remove all files from folder
-    # clean_up(dirname)
+    clean_up(dirname)
 
 
 main('../Pictures')
