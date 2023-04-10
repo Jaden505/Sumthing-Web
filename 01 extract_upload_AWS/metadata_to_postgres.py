@@ -1,11 +1,20 @@
 import os
+
 import sqlalchemy as db
-from img_to_AWS_to_db import get_image_metadata
-from helper_batch import get_first_last_date_from_batch, get_center_of_batch
+
 from db_CRUD import connect_database, create_tables
 from db_ORM import Batch, AllImage
+from helper_batch import get_first_last_date_from_batch, get_center_of_batch
+from img_to_AWS_to_db import get_image_metadata
 
-engine, conn = connect_database('postgresql://@localhost:5432/postgres')
+import json
+
+with open('../config.json') as f:
+    config = json.load(f)
+
+url = f'postgresql://{config["user"]}:{config["password"]}@{config["host"]}:{config["port"]}/{config["database"]}'
+
+engine, conn = connect_database(url)
 create_tables(engine)
 
 batch = Batch.__table__
@@ -29,7 +38,6 @@ def batch_to_db(batch_name):
     )
     conn.execute(ins)
     conn.commit()
-
     return batch_key
 
 

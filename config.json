@@ -1,0 +1,8 @@
+{
+    "pictures_dir": "path/to/images",
+    "user": "postgres",
+    "password": "root",
+    "host": "localhost",
+    "port": "5432",
+    "database": "sumting"
+}
