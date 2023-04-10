@@ -3,10 +3,11 @@ import numpy as np
 import pywt
 import cv2
 from skimage.feature import local_binary_pattern
-from tensorflow.keras.applications.vgg16 import VGG16, preprocess_input
+from keras.applications.vgg16 import VGG16, preprocess_input
 from pyod.models.hbos import HBOS
 import psycopg2
 import base64
+
 
 # Function to insert images into the database
 def insert_image(database, user, password, host, port, image_path, folder_name):
