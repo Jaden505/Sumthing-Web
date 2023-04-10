@@ -9,11 +9,18 @@ import os
 from db_ORM import Batch, AllImage
 
 dotenv.load_dotenv()
-url = os.environ['DATABASE_TO_URI']
+
+user = ''
+password = ''
+host = 'localhost'
+port = '5432'
+database = 'postgres@localhost'
+
+url = f'postgresql://{user}:{password}@{host}:{port}/{database}'
 
 def connect_database(url):
     try:
-        engine = create_engine(url, echo = False) #echo=True
+        engine = create_engine(url)
         conn = engine.connect()
         return engine, conn
 
@@ -22,12 +29,14 @@ def connect_database(url):
         return None, None
 
 
+engine, conn = connect_database(url)
+
+
 def create_tables(engine):
     Base.metadata.create_all(engine)
 
 
 def upload_db_orm(url, picture_list):
-    engine, conn = connect_database(url)
     if conn:
         Session = sessionmaker(bind=engine)
         session = Session()
@@ -38,7 +47,6 @@ def upload_db_orm(url, picture_list):
 
 
 def upload_all_images(url, picture_list):
-    engine, conn = connect_database(url)
     if conn:
         Session = sessionmaker(bind=engine)
         session = Session()
@@ -47,18 +55,16 @@ def upload_all_images(url, picture_list):
         session.commit()
     return None
 
-def select_all_comparable_image():
-    engine, conn = connect_database(url)
 
+def select_all_comparable_image():
     Session = sessionmaker(bind = engine)
     session = Session()
 
     results = session.query(AllImage).filter(AllImage.score_duplicate_tree != None).order_by(AllImage.score_duplicate_tree)
     return results
 
-def delete_image(proof_key):
-    engine, conn = connect_database(url)
 
+def delete_image(proof_key):
     stmt = (
         delete(AllImage).
         where(AllImage.proof_key == proof_key)
@@ -67,7 +73,6 @@ def delete_image(proof_key):
     conn.execute(stmt)
 
     return True
-
 
 
 def update_image_score(image_name, score, index):
@@ -84,8 +89,7 @@ def update_image_score(image_name, score, index):
     :return: Updates correct line in database to show new score
     """
     score = float(score)
-    engine, conn = connect_database(url)
-    list = [(
+    updates = [(
         update(AllImage).
         where(AllImage.proof_image_name == image_name).
         values(score_tree_not_tree=score)
@@ -111,6 +115,6 @@ def update_image_score(image_name, score, index):
         values(score_total=score)
     )]
 
-    stmt = list[index - 1]
+    stmt = updates[index - 1]
 
     conn.execute(stmt)

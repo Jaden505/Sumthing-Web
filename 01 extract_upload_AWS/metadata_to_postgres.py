@@ -1,63 +1,65 @@
+import os
+import sqlalchemy as db
 from img_to_AWS_to_db import get_image_metadata
-import psycopg2, os
+from helper_batch import get_first_last_date_from_batch, get_center_of_batch
+from db_CRUD import connect_database, create_tables
+from db_ORM import Batch, AllImage
+
+engine, conn = connect_database('postgresql://@localhost:5432/postgres')
+create_tables(engine)
+
+batch = Batch.__table__
+images = AllImage.__table__
 
 
-def images_from_dir_to_db(image_dir):
-    # Loop through each file in the directory
+def batch_to_db(batch_name):
+    ins = batch.insert().values(batch_name=batch_name)
+    batch_key = conn.execute(ins).inserted_primary_key[0]
+
+    first_datetime, last_datetime = get_first_last_date_from_batch(batch_name, batch_key)
+    center_lon, center_lat = get_center_of_batch(batch_name, batch_key)
+
+    # Insert batch key into the batch table
+    ins = batch.update().where(batch.c.batch_key == batch_key).values(
+        center_long=center_lon,
+        center_lat=center_lat,
+        first_photo_upload=first_datetime,
+        last_photo_upload=last_datetime,
+        batch_name=batch_name
+    )
+    conn.execute(ins)
+    conn.commit()
+
+    return batch_key
+
+
+def metadata_to_db(image_dir, batch_key):
     for filename in os.listdir(image_dir):
         filepath = os.path.join(image_dir, filename)
 
+        metadata = get_image_metadata(filepath, batch_key)
+
+        # Insert metadata into the proof table
+        ins = images.insert().values(
+            proof_image_name=filename,
+            batch_key=batch_key,
+            proof_date=metadata['proof_date'],
+            latitude=metadata['latitude'],
+            longitude=metadata['longitude'],
+        )
         try:
-            metadata = get_image_metadata(filepath)
-        except:
-            print(f"Error extracting metadata from {filename}")
-            continue
-
-        batch_key = metadata['batch_key']
-
-        insert = insert_query("INSERT INTO batch (batch_key) VALUES (%s)", (batch_key,))
-        if not insert:
-            print(f"Batch {batch_key} already exists")
-            continue
-
-        query = "INSERT INTO proof ("
-        columns = []
-        values = []
-        for key, value in metadata.items():
-            columns.append(key)
-            values.append(str(value))
-        query += ", ".join(columns) + ") VALUES ("
-        query += ", ".join(["%s" for _ in range(len(values))]) + ")"
-
-        insert = insert_query(query, tuple(values))
-        if not insert:
+            conn.execute(ins)
+            conn.commit()
+        except db.exc.IntegrityError:
             print(f"Image {filename} already exists")
             continue
 
 
-def insert_query(query, values):
-    try:
-        cur.execute(query, tuple(values))
-        conn.commit()
-    except psycopg2.errors.UniqueViolation:
-        conn.rollback()
-        return False
-
-    return True
-
 if __name__ == "__main__":
-    # Initialise the database connection
-    conn = psycopg2.connect(
-        host="localhost",
-        database="postgres",
-        user="",
-        password=""
-    )
-    cur = conn.cursor()
+    plastic_key = batch_to_db('../Pictures/plastic/Batch 1')
+    metadata_to_db('../Pictures/plastic/Batch 1', plastic_key)
 
-    images_from_dir_to_db('../Pictures/plastic/Batch 1')
-    images_from_dir_to_db('../Pictures/trees')
+    trees_key = batch_to_db('../Pictures/trees')
+    metadata_to_db('../Pictures/trees', trees_key)
 
-    # Close the database connection
-    cur.close()
     conn.close()
