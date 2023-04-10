@@ -11,6 +11,7 @@ def duplicate_check_CNN(path,  req_threshold):
     for key, value in duplicates.items():
         if len(value) > 0:
             for image, percentage in value:
+                print(key, percentage)
                 update_image_score(key, percentage, 2)
 
 
