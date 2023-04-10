@@ -7,6 +7,13 @@ from keras.applications.vgg16 import VGG16, preprocess_input
 from pyod.models.hbos import HBOS
 import psycopg2
 import base64
+import json
+
+
+def load_config(config_path):
+    with open(config_path, 'r') as config_file:
+        config = json.load(config_file)
+        return config
 
 
 # Function to insert images into the database
@@ -148,7 +155,7 @@ def extract_lbp_features(images, num_points=24, radius=3, method="uniform"):
     return np.array(lbp_features)
 
 
-def extract_cnn_features(images, model=None):
+def extract_cnn_features(images, model=None, target_size=(128, 128)):
     print(f"Number of input images in extract_cnn_features: {len(images)}")
     if model is None:
         model = VGG16(weights='imagenet', include_top=False, pooling='avg')
@@ -182,21 +189,21 @@ def clear_images_table(database, user, password, host, port):
 
 
 if __name__ == "__main__":
-    target_size = (128, 128)
-    image_directory = "/Users/ayoubezzaouia/Desktop/trees"
-    folder_name = "Trees"
+    config_path = "/Users/ayoubezzaouia/sumting-1/config.json"
+    config = load_config(config_path)
+
+    image_directory = config["pictures_dir"]
+    folder_name = config["folder_name"]
+    db_config = {key: config[key] for key in ["database", "user", "password", "host", "port"]}
 
     # Clear the images table
-    clear_images_table(database="postgres", user="postgres", password="ezzaouia1612",
-                       host="localhost", port="5432")
+    clear_images_table(**db_config)
 
     # Populate the database with images
-    add_images_to_database(database="postgres", user="postgres", password="ezzaouia1612",
-                           host="localhost", port="5432", image_directory=image_directory, folder_name=folder_name)
+    add_images_to_database(image_directory=image_directory, **db_config, folder_name=folder_name)
 
     # Load images from the database
-    images, filenames = load_images_from_db(database="postgres", user="postgres", password="ezzaouia1612",
-                                            host="localhost", port="5432")
+    images, filenames = load_images_from_db(**db_config)
 
     # Extract wavelet features and other features
     features = extract_wavelet_features(images)
