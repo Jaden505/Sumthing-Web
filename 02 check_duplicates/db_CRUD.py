@@ -1,10 +1,9 @@
 from sqlalchemy import create_engine
-from sqlalchemy import delete,update
+from sqlalchemy import delete, update
 from sqlalchemy.orm import sessionmaker
 from db_ORM import Base
 import dotenv
 import os
-
 
 from db_ORM import Batch, AllImage
 
@@ -14,9 +13,10 @@ user = ''
 password = ''
 host = 'localhost'
 port = '5432'
-database = 'postgres@localhost'
+database = 'postgres'
 
 url = f'postgresql://{user}:{password}@{host}:{port}/{database}'
+
 
 def connect_database(url):
     try:
@@ -57,10 +57,11 @@ def upload_all_images(url, picture_list):
 
 
 def select_all_comparable_image():
-    Session = sessionmaker(bind = engine)
+    Session = sessionmaker(bind=engine)
     session = Session()
 
-    results = session.query(AllImage).filter(AllImage.score_duplicate_tree != None).order_by(AllImage.score_duplicate_tree)
+    results = session.query(AllImage).filter(AllImage.score_duplicate_tree != None).order_by(
+        AllImage.score_duplicate_tree)
     return results
 
 
@@ -89,32 +90,27 @@ def update_image_score(image_name, score, index):
     :return: Updates correct line in database to show new score
     """
     score = float(score)
-    updates = [(
+    updates = [
         update(AllImage).
         where(AllImage.proof_image_name == image_name).
-        values(score_tree_not_tree=score)
-    ), (
+        values(score_tree_not_tree=score),
         update(AllImage).
         where(AllImage.proof_image_name == image_name).
-        values(score_duplicate_tree=score)
-    ), (
+        values(score_duplicate_tree=score),
         update(AllImage).
         where(AllImage.proof_image_name == image_name).
-        values(score_hash_image=score)
-    ), (
+        values(score_hash_image=score),
         update(AllImage).
         where(AllImage.proof_image_name == image_name).
-        values(score_rgb_image=score)
-    ), (
+        values(score_rgb_image=score),
         update(AllImage).
         where(AllImage.proof_image_name == image_name).
-        values(score_weather=score)
-    ), (
+        values(score_weather=score),
         update(AllImage).
         where(AllImage.proof_image_name == image_name).
         values(score_total=score)
-    )]
+    ]
 
     stmt = updates[index - 1]
-
     conn.execute(stmt)
+    conn.commit()
