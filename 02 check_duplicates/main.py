@@ -2,7 +2,7 @@ import os
 import dotenv
 
 from duplicate_check_CNN import duplicate_check_CNN
-from img_checker import find_corrupted, find_duplicates, find_duplicates_mean
+from img_checker import find_corrupted, find_duplicates
 
 from helper_images import clean_up
 

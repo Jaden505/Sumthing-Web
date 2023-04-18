@@ -1,5 +1,6 @@
 import hashlib, math
 from PIL import Image, ImageStat
+from datetime import datetime, timedelta
 
 
 def get_hash(img_path):
@@ -36,5 +37,13 @@ def within_one_meter(lat1, lon1, lat2, lon2):
 def check_within_one_meter(lat_lon_pairs, target_lat, target_lon):
     for lat, lon in lat_lon_pairs:
         if within_one_meter(lat, lon, target_lat, target_lon):
+            return (lat, lon)
+    return None
+
+
+def check_within_10_seconds(datetimes, comparison_datetime):
+    for dt in datetimes:
+        time_difference = abs(dt - comparison_datetime)
+        if time_difference <= timedelta(seconds=10):
             return True
     return False

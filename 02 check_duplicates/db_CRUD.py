@@ -36,7 +36,7 @@ def create_tables(engine):
     Base.metadata.create_all(engine)
 
 
-def upload_db_orm(url, picture_list):
+def upload_db_orm(picture_list):
     if conn:
         Session = sessionmaker(bind=engine)
         session = Session()
@@ -46,7 +46,7 @@ def upload_db_orm(url, picture_list):
     return None
 
 
-def upload_all_images(url, picture_list):
+def upload_all_images(picture_list):
     if conn:
         Session = sessionmaker(bind=engine)
         session = Session()
@@ -74,6 +74,16 @@ def delete_image(proof_key):
     conn.execute(stmt)
 
     return True
+
+
+def get_metadata(image_name):
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    results = session.query(AllImage.proof_date, AllImage.latitude, AllImage.longitude).filter(AllImage.proof_image_name == image_name).first()
+    session.close()
+
+    return results
 
 
 def update_image_score(image_name, score, index):

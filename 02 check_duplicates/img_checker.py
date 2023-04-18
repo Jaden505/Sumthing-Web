@@ -1,6 +1,6 @@
 import os
 
-from db_CRUD import update_image_score
+from db_CRUD import update_image_score, get_metadata
 from helper_checker import *
 
 
@@ -20,19 +20,36 @@ def find_corrupted(dir):
     return invalid_files
 
 
-def find_duplicate_coordinates(filepath, filename, invalid_files, coordinate_keys):
-    metadata =
+def find_duplicate_coordinates(metadata, filename, invalid_files, coordinate_keys):
+    location = (metadata.latitude, metadata.longitude)
+    nearby = check_within_one_meter(coordinate_keys.keys(), location[0], location[1])
 
-    if check_within_one_meter(coordinate_keys.keys(), mean[0], mean[1]):
-        file_dup = coordinate_keys[mean]
+    if nearby is not None:
+        file_dup = coordinate_keys[nearby]
         invalid_files.append([filename, file_dup])
-        update_image_score(filename, 1, 2)
-        update_image_score(file_dup, 1, 2)
+        update_image_score(filename, 1, 5)
+        update_image_score(file_dup, 1, 5)
         print(f"found duplicate coordinates nearby: {filename} == {file_dup}")
     else:
-        coordinate_keys[mean] = filename
+        coordinate_keys[location] = filename
 
     return coordinate_keys, invalid_files
+
+
+def find_duplicate_time(metadata, filename, invalid_files, time_keys):
+    time = metadata.proof_date
+    date_times = [datetime.strptime(x, "%H:%M:%S") for x in time_keys.keys()]
+
+    if check_within_10_seconds(date_times, time):
+        file_dup = time_keys[time.strftime("%H:%M:%S")]
+        invalid_files.append([filename, file_dup])
+        update_image_score(filename, 1, 1)
+        update_image_score(file_dup, 1, 1)
+        print(f"found duplicate time: {filename} == {file_dup}")
+    else:
+        time_keys[time.strftime("%H:%M:%S")] = filename
+
+    return time_keys, invalid_files
 
 
 def find_duplicate_mean(filepath, filename, invalid_files, mean_color_keys):
@@ -72,6 +89,7 @@ def find_duplicates(dir_name):
     mean_color_keys = {}
     hash_keys = {}
     coordinate_keys = {}
+    time_keys = {}
 
     cwd = os.getcwd()
 
@@ -81,5 +99,12 @@ def find_duplicates(dir_name):
             mean_color_keys, invalid_files = find_duplicate_mean(filepath, filename, invalid_files, mean_color_keys)
             hash_keys, invalid_files = find_duplicate_hash(filepath, filename, invalid_files, hash_keys)
 
-    return invalid_files
+            metadata = get_metadata(filename)
+            if metadata is None:
+                continue
 
+            coordinate_keys, invalid_files = find_duplicate_coordinates(metadata, filename, invalid_files,
+                                                                        coordinate_keys)
+            time_keys, invalid_files = find_duplicate_time(metadata, filename, invalid_files, time_keys)
+
+    return invalid_files
