@@ -38,16 +38,17 @@ def find_duplicate_coordinates(metadata, filename, invalid_files, coordinate_key
 
 def find_duplicate_time(metadata, filename, invalid_files, time_keys):
     time = metadata.proof_date
-    date_times = [datetime.strptime(x, "%H:%M:%S") for x in time_keys.keys()]
+    date_times = [datetime.strptime(x, '%Y-%m-%d %H:%M:%S.%f') for x in time_keys.keys()]
+    quickly = check_within_10_seconds(date_times, time)
 
-    if check_within_10_seconds(date_times, time):
-        file_dup = time_keys[time.strftime("%H:%M:%S")]
+    if quickly is not None:
+        file_dup = time_keys[quickly.strftime('%Y-%m-%d %H:%M:%S.%f')]
         invalid_files.append([filename, file_dup])
         update_image_score(filename, 1, 1)
         update_image_score(file_dup, 1, 1)
         print(f"found duplicate time: {filename} == {file_dup}")
     else:
-        time_keys[time.strftime("%H:%M:%S")] = filename
+        time_keys[time.strftime('%Y-%m-%d %H:%M:%S.%f')] = filename
 
     return time_keys, invalid_files
 
@@ -107,4 +108,5 @@ def find_duplicates(dir_name):
                                                                         coordinate_keys)
             time_keys, invalid_files = find_duplicate_time(metadata, filename, invalid_files, time_keys)
 
+    print(invalid_files)
     return invalid_files

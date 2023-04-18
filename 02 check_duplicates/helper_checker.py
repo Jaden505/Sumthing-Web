@@ -45,5 +45,5 @@ def check_within_10_seconds(datetimes, comparison_datetime):
     for dt in datetimes:
         time_difference = abs(dt - comparison_datetime)
         if time_difference <= timedelta(seconds=10):
-            return True
-    return False
+            return dt
+    return None
