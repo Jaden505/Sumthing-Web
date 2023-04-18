@@ -10,7 +10,11 @@ def get_first_last_date_from_batch(dir_name, batch_id):
 
     for file in os.listdir(dir_name):
         path = os.path.join(dir_name, file)
-        date = get_image_metadata(path, batch_id)['proof_date']
+        metadata = get_image_metadata(path, batch_id)
+        if metadata is None:
+            continue
+
+        date = metadata['proof_date']
 
         if date > last_datetime:
             last_datetime = date
@@ -31,6 +35,9 @@ def get_center_of_batch(dir_name, batch_id):
     for index, file in enumerate(os.listdir(dir_name)):
         path = os.path.join(dir_name, file)
         metadata = get_image_metadata(path, batch_id)
+
+        if metadata is None or metadata['latitude'] is None or metadata['longitude'] is None:
+            continue
 
         total_lon += metadata['longitude']
         total_lat += metadata['latitude']

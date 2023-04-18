@@ -2,7 +2,7 @@ import os
 import dotenv
 
 from duplicate_check_CNN import duplicate_check_CNN
-from img_checker import find_corrupted, find_duplicates, find_duplicate_mean
+from img_checker import find_corrupted, find_duplicates, find_duplicates_mean
 
 from helper_images import clean_up
 
@@ -28,7 +28,6 @@ def main(dirname):
         if os.path.isdir(path):
             find_corrupted(path)
             find_duplicates(path)
-            find_duplicate_mean(path)
 
             # check_if_tree(path)
             # check if is look - a - like  
@@ -38,4 +37,4 @@ def main(dirname):
     # clean_up(dirname)
 
 
-main('../Pictures/plastic')
+main('../Pictures')

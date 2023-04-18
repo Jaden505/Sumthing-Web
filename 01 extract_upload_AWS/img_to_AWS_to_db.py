@@ -24,6 +24,9 @@ def get_image_metadata(filepath, batch_id):
     img = Image.open(filepath)
     exif_data = get_exif_data(img)
 
+    if exif_data == {} or 'GPSInfo' not in exif_data or 'DateTime' not in exif_data:
+        return None
+
     # img datetime
     exif_datetime = get_datetime(exif_data)
     datetime = dt.datetime.strptime(exif_datetime, '%Y:%m:%d %H:%M:%S')
@@ -31,9 +34,6 @@ def get_image_metadata(filepath, batch_id):
 
     # lat, lon
     lat, lon = get_lat_lon(exif_data)
-
-    lat = 0 if lat is None else lat
-    lon = 0 if lon is None else lon
 
     dict['latitude'] = lat
     dict['longitude'] = lon
@@ -53,7 +53,6 @@ def upload_image_extract_metadata_all(dirname, ACCESS_KEY, SECRET_KEY, bucketnam
 
             for filename in os.listdir(path):
                 if filename.endswith(ext):
-                    dict = {}
                     dict = get_image_metadata(filename)
                     # resizer(os.path.join(cwd, d, filename))
 

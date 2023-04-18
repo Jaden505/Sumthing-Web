@@ -15,7 +15,7 @@ with open('../config.json') as f:
 url = f'postgresql://{config["user"]}:{config["password"]}@{config["host"]}:{config["port"]}/{config["database"]}'
 
 engine, conn = connect_database(url)
-create_tables(engine)
+# create_tables(engine)
 
 batch = Batch.__table__
 images = AllImage.__table__
@@ -46,6 +46,9 @@ def metadata_to_db(image_dir, batch_key):
         filepath = os.path.join(image_dir, filename)
 
         metadata = get_image_metadata(filepath, batch_key)
+        if metadata is None:
+            print(f"Image {filename} is corrupted")
+            continue
 
         # Insert metadata into the proof table
         ins = images.insert().values(
@@ -64,10 +67,10 @@ def metadata_to_db(image_dir, batch_key):
 
 
 if __name__ == "__main__":
-    plastic_key = batch_to_db('../Pictures/plastic/Batch 1')
-    metadata_to_db('../Pictures/plastic/Batch 1', plastic_key)
+    plastic_key = batch_to_db(config['pictures_dir'] + '/plastic')
+    trees_key = batch_to_db(config['pictures_dir'] + '/trees')
 
-    trees_key = batch_to_db('../Pictures/trees')
-    metadata_to_db('../Pictures/trees', trees_key)
+    metadata_to_db(config['pictures_dir'] + '/plastic', plastic_key)
+    metadata_to_db(config['pictures_dir'] + '/trees', trees_key)
 
     conn.close()
