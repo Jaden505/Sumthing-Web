@@ -1,12 +1,26 @@
 import requests
+import json
+
+with open('../config.json') as f:
+    config = json.load(f)
 
 
 def get_weather_data(lat_long, date):
-    api_key = "2b4a3252534e0a5ccd7a7baef67120a3" # ! MOVE TO ENV FILE BEFORE DEPLOYMENT || os.environ.get('WEATHER_API_KEY')
-    url = f'http://api.weatherstack.com/current?access_key={api_key}&query={lat_long}&historical_date={date}'
-    res  = requests.get(url)
+    url = f'http://api.weatherstack.com/current?access_key={config["weather-api-key"]}&query={lat_long}&historical_date={date}'
+    res = requests.get(url)
     data = res.json()
 
     return data
 
 
+# Retrieve current weather data by latitude and longitude
+def get_current_weather_data(lat_long):
+    url = f'http://api.weatherstack.com/current?access_key={config["weather-api-key"]}&query={lat_long}'
+    res = requests.get(url)
+    data = res.json()
+
+    return data
+
+
+# use . and a space to separate objects, and a space, a = and a space to separate keys from their values:
+print(json.dumps(get_current_weather_data("52.374_4.890"), indent=4, separators=(". ", " = ")))
