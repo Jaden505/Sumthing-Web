@@ -108,5 +108,4 @@ def find_duplicates(dir_name):
                                                                         coordinate_keys)
             time_keys, invalid_files = find_duplicate_time(metadata, filename, invalid_files, time_keys)
 
-    print(invalid_files)
     return invalid_files
