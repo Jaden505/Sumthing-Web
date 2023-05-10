@@ -34,7 +34,32 @@ ON DELETE NO ACTION
 )
 ```
 
+## Windows Requirements File
+```
+boto3==1.26.96
+botocore==1.29.96
+Flask==2.2.3
+flask_navigation==0.2.0
+imagededup==0.3.1
+imageio==2.26.1
+keras==2.12.0
+matplotlib==3.7.1
+numpy==1.23.5
+pandas==1.5.3
+Pillow==9.4.0
+plotly==5.13.1
+psycopg2==2.9.5
+python-dotenv==1.0.0
+requests==2.28.2
+scikit_learn==1.2.2
+SQLAlchemy==2.0.12
+tensorflow==2.12.0
+Werkzeug==2.2.3
 
+opencv-python~=4.7.0.72
+scikit-image~=0.20.0
+pyod~=1.0.9
+```
 
 [//]: # (## Getting started)
 
