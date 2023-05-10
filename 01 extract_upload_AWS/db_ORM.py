@@ -5,6 +5,50 @@ from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
+class ProofTable(Base):
+    __tablename__ = 'proof_table'
+
+    proof_key = sa.Column(sa.BigInteger(), primary_key=True, autoincrement=True)
+    created_at = sa.Column(sa.DateTime(), default=datetime.datetime.utcnow)
+
+    img_name = sa.Column(sa.VARCHAR())
+    img_creation_date = sa.Column(sa.DateTime())
+    img_last_update_date = sa.Column(sa.DateTime(), default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+    img_device_model = sa.Column(sa.VARCHAR())
+    img_format = sa.Column(sa.VARCHAR())
+    img_iso = sa.Column(sa.Integer())
+    img_f_number = sa.Column(sa.Float())
+    img_focal_length = sa.Column(sa.Float())
+    img_flash = sa.Column(sa.Integer())
+    img_shutterspeed = sa.Column(sa.Float())
+    img_exposure_time = sa.Column(sa.Float())
+    img_dimensions = sa.Column(sa.VARCHAR())
+    img_total_pixels = sa.Column(sa.Integer())
+    img_color_space = sa.Column(sa.VARCHAR())
+    img_color_profile = sa.Column(sa.VARCHAR())
+    img_latitude = sa.Column(sa.Float())
+    img_longitude = sa.Column(sa.Float())
+    img_altitude = sa.Column(sa.Float())
+    img_original_url = sa.Column(sa.VARCHAR())
+
+    check_metadate_score = sa.Column(sa.Float())
+    check_duplicate_score = sa.Column(sa.Float())
+    check_sharpness_score = sa.Column(sa.Float())
+    check_outlier_score = sa.Column(sa.Float())
+    check_weather_score = sa.Column(sa.Float())
+
+    proof_validated = sa.Column(sa.Boolean(), default=False)
+    proof_validated_date = sa.Column(sa.DateTime())
+    proof_validated_user = sa.Column(sa.VARCHAR())
+    proof_small = sa.Column(sa.VARCHAR())
+    proof_medium = sa.Column(sa.VARCHAR())
+    proof_large = sa.Column(sa.VARCHAR())
+    proof_notes = sa.Column(sa.VARCHAR())
+
+    batch_key = sa.Column(sa.BigInteger, sa.ForeignKey('batch.batch_key'))
+
+    def __repr__(self):
+        return f'proof_table(proof_key={self.proof_key}, proof_date={self.proof_date})'
 
 class OrderlineContribution2(Base):
     __tablename__ = 'orderline_contribution2'

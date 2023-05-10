@@ -14,7 +14,7 @@ def get_first_last_date_from_batch(dir_name, batch_id):
         if metadata is None:
             continue
 
-        date = metadata['proof_date']
+        date = metadata['img_creation_date']
 
         if date > last_datetime:
             last_datetime = date
@@ -36,11 +36,11 @@ def get_center_of_batch(dir_name, batch_id):
         path = os.path.join(dir_name, file)
         metadata = get_image_metadata(path, batch_id)
 
-        if metadata is None or metadata['latitude'] is None or metadata['longitude'] is None:
+        if metadata is None or metadata['img_latitude'] is None or metadata['img_longitude'] is None:
             continue
 
-        total_lon += metadata['longitude']
-        total_lat += metadata['latitude']
+        total_lon += metadata['img_longitude']
+        total_lat += metadata['img_latitude']
         count += 1
 
     center_lon = total_lon / count

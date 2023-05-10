@@ -8,7 +8,7 @@ from helper_batch import get_center_of_batch, get_first_last_date_from_batch
 
 import json
 
-with open('../config.json') as f:
+with open('config.json') as f:
     config = json.load(f)
 url = f'postgresql://{config["user"]}:{config["password"]}@{config["host"]}:{config["port"]}/{config["database"]}'
 

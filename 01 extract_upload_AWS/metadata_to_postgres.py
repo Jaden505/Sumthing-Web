@@ -3,22 +3,22 @@ import os
 import sqlalchemy as db
 
 from db_CRUD import connect_database, create_tables
-from db_ORM import Batch, AllImage
+from db_ORM import Batch, ProofTable
 from helper_batch import get_first_last_date_from_batch, get_center_of_batch
 from img_to_AWS_to_db import get_image_metadata
 
 import json
 
-with open('../config.json') as f:
+with open('config.json') as f:
     config = json.load(f)
 
 url = f'postgresql://{config["user"]}:{config["password"]}@{config["host"]}:{config["port"]}/{config["database"]}'
 
 engine, conn = connect_database(url)
-# create_tables(engine)
+create_tables(engine)
 
 batch = Batch.__table__
-images = AllImage.__table__
+images = ProofTable.__table__
 
 
 def batch_to_db(batch_name):
@@ -52,12 +52,23 @@ def metadata_to_db(image_dir, batch_key):
 
         # Insert metadata into the proof table
         ins = images.insert().values(
-            proof_image_name=filename,
+            img_name=filename,
+            img_creation_date=metadata['img_creation_date'],
+            img_device_model=metadata['img_device_model'],
+            img_format=metadata['img_format'],
+            img_iso=metadata['img_iso'],
+            img_f_number=metadata['img_f_number'],
+            img_focal_length=metadata['img_focal_length'],
+            img_flash=metadata['img_flash'],
+            img_shutterspeed=metadata['img_shutterspeed'],
+            img_exposure_time=metadata['img_exposure_time'],
+            img_dimensions=metadata['img_dimensions'],
+            img_total_pixels= metadata['img_total_pixels'],
+            img_latitude=metadata['img_latitude'],
+            img_longitude=metadata['img_longitude'],
+            img_altitude=metadata['img_altitude'],
             batch_key=batch_key,
-            proof_date=metadata['proof_date'],
-            latitude=metadata['latitude'],
-            longitude=metadata['longitude'],
-        )
+            )
         try:
             conn.execute(ins)
             conn.commit()
@@ -67,10 +78,10 @@ def metadata_to_db(image_dir, batch_key):
 
 
 if __name__ == "__main__":
-    plastic_key = batch_to_db(config['pictures_dir'] + '/plastic')
+    plastic_key = batch_to_db(config['pictures_dir'] + '/plastic/batch 1')
     trees_key = batch_to_db(config['pictures_dir'] + '/trees')
 
-    metadata_to_db(config['pictures_dir'] + '/plastic', plastic_key)
+    metadata_to_db(config['pictures_dir'] + '/plastic/batch 1', plastic_key)
     metadata_to_db(config['pictures_dir'] + '/trees', trees_key)
 
     conn.close()

@@ -2,7 +2,7 @@ import os, re
 import pandas as pd
 from PIL import Image
 
-from helper_img_metadata import get_exif_data, get_lat_lon, get_datetime
+from helper_img_metadata import *
 from helper_img_to_aws import upload_image_to_aws
 from convert_to_jpg import resizer
 from db_ORM import AllImage
@@ -30,13 +30,30 @@ def get_image_metadata(filepath, batch_id):
     # img datetime
     exif_datetime = get_datetime(exif_data)
     datetime = dt.datetime.strptime(exif_datetime, '%Y:%m:%d %H:%M:%S')
-    dict['proof_date'] = datetime
+    dict['img_creation_date'] = datetime
 
     # lat, lon
-    lat, lon = get_lat_lon(exif_data)
+    lat, lon, alt = get_lat_lon_alt(exif_data)
+    dict['img_latitude'] = lat
+    dict['img_longitude'] = lon
+    dict['img_altitude'] = alt
 
-    dict['latitude'] = lat
-    dict['longitude'] = lon
+    #format
+    dict['img_format'] = img.format
+
+    #img data
+    dict['img_device_model'] = get_model(exif_data)
+    dict['img_iso'] = get_iso(exif_data)
+    dict['img_f_number'] = get_f_number(exif_data)
+    dict['img_focal_length'] = get_focal_length(exif_data)
+    dict['img_flash'] = get_flash(exif_data)
+    dict['img_shutterspeed'] = get_shutterspeed(exif_data)
+    dict['img_exposure_time'] = get_exposure_time(exif_data)
+
+    #pixels, dimensions
+    dimensions, total_pixels = get_pixels_dimensions(exif_data)
+    dict['img_dimensions'] = dimensions
+    dict['img_total_pixels'] = total_pixels
 
     return dict
 
