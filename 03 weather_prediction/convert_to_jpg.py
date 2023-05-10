@@ -39,8 +39,12 @@ def image_name_changer(directory, file_ends_with, dir_to_save_in):
                 joined_path = os.path.join(directory, folder_name, filename)
                 im = Image.open(joined_path)
                 name = folder_name + "_" + filename.split(".")[0] + '.JPG'
-                im.save(os.path.join(dir_to_save_in, name))
-                os.remove(joined_path)
+                try:
+                    im.save(os.path.join(dir_to_save_in, name))
+                except Exception as err:
+                    print('Something went wrong trying to save the updated image.')
+
+                # os.remove(joined_path)
                 continue
             else:
                 continue

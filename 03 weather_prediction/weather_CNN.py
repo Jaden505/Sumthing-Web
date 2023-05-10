@@ -24,9 +24,9 @@ def GetTrainingData():
     shape = (img_size, img_size)
 
     # Path for changer should be the path where all images are saved at first
-    path_for_changer = ""
+    path_for_changer = "dataset"
     # Path to save should be the path where all new images should be saved to
-    path_to_save = ""
+    path_to_save = "updated_dataset"
 
     # Image name changer makes sure that the photo's names change to have a number infront.
     # This numnber corresponds to the weather seen on the picture
@@ -55,7 +55,7 @@ def GetTrainingData():
     x_train1, x_test1, y_train1, y_test1 = train_test_split(train_images, train_labels, random_state=1)
 
     # Test to see if all data got loaded in correctly
-    print(y_train1[0])
+    print(x_train1.shape, x_test1.shape, y_train1.shape, y_test1.shape)
     plt.imshow(x_train1[0], interpolation='nearest')
     plt.show()
     return [x_train1, x_test1, y_train1, y_test1]
@@ -115,3 +115,7 @@ def train_model():
     print("Predicted :- ", output[np.argmax(predict)])
     plt.imshow(x_test[0], interpolation='nearest')
     plt.show()
+
+
+if __name__ == "__main__":
+    train_model()
