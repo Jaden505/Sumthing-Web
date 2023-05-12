@@ -1,8 +1,12 @@
 async function updateSelectedImage(img) {
     document.getElementById('selected-image').src = img.src;
-    console.log(img.src)
 
-    console.log(await getCurrentWeatherData("52.374_4.890"))
+
+    let original_img_src = img.src
+    let url_to_remove = "http://127.0.0.1:5000/static/images/"
+    let img_name = original_img_src.replace(url_to_remove, '')
+
+    await getImageData(img_name)
 }
 
 function handleScroll(event) {
@@ -22,6 +26,17 @@ async function getCurrentWeatherData(query) {
             // Process the response here
         }
     };
-     xhr.send();
+    xhr.send();
+}
+
+/**
+ * Retrieves image data by calling the API
+ * @param img_name - image name
+ * @returns {Promise<void>} - data of the image
+ */
+async function getImageData(img_name) {
+    const response = await fetch(`http://127.0.0.1:5000/get_image_data?query=${img_name}`);
+    const jsonData = await response.json();
+    console.log(jsonData);
 }
 
