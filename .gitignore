@@ -155,3 +155,10 @@ config.json
 03 extract_upload_AWS/.DS_Store
 04 extract_upload_AWS/.DS_Store
 website/.DS_Store
+03 weather_prediction/dataset
+
+dataset/
+update_dataset/
+
+03 weather_prediction/dataset/
+03 weather_prediction/updated_dataset/
