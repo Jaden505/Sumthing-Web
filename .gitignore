@@ -154,7 +154,7 @@ config.json
 02 check_duplicates/.DS_Store
 03 extract_upload_AWS/.DS_Store
 04 extract_upload_AWS/.DS_Store
-website/.DS_Store
+06 website/.DS_Store
 03 weather_prediction/dataset
 
 dataset/

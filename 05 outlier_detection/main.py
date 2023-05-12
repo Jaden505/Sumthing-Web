@@ -45,7 +45,7 @@ if __name__ == "__main__":
         combined_features = np.concatenate((features, color_histograms, lbp_features, cnn_features), axis=1)
 
         # Identify outliers
-        contamination = 0.02
+        contamination = 0.1
         outliers = identify_outliers(combined_features, filenames, contamination=contamination)
 
         if len(outliers) == 0:
