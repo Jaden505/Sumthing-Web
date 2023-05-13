@@ -1,9 +1,9 @@
 {
-    "pictures_dir": "../Pictures",
-    "user": "",
-    "password": "",
+    "pictures_dir": "/Users/ayoubezzaouia/Desktop/trees",
+    "user": "postgres",
+    "password": "ezzaouia1612",
     "host": "localhost",
     "port": "5432",
     "database": "postgres",
-    "weather-api-key": "2b4a3252534e0a5ccd7a7baef67120a3"
+    "folder_name": "Outliers"
 }
