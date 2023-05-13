@@ -3,7 +3,7 @@ import os
 
 from flask import Flask, render_template, jsonify, request
 
-from website.models.proof import Proof, db
+from models.proof import Proof, db
 
 with open('../config.json') as f:
     config = json.load(f)

@@ -6,7 +6,12 @@ async function updateSelectedImage(img) {
     let url_to_remove = "http://127.0.0.1:5000/static/images/"
     let img_name = original_img_src.replace(url_to_remove, '')
 
-    await getImageData(img_name)
+    const data = await getImageData(img_name)
+    if(data[0] === undefined) {
+        document.querySelector(".weather-info-no-data").style.display = "block"
+    } else {
+        document.querySelector(".weather-info-no-data").style.display = "none"
+    }
 }
 
 function handleScroll(event) {
@@ -36,7 +41,6 @@ async function getCurrentWeatherData(query) {
  */
 async function getImageData(img_name) {
     const response = await fetch(`http://127.0.0.1:5000/get_image_data?query=${img_name}`);
-    const jsonData = await response.json();
-    console.log(jsonData);
+    return await response.json();
 }
 
