@@ -4,15 +4,15 @@
     box-sizing: border-box;
     font-family: "Montserrat", sans-serif;
     color: rgb(147, 113, 113);
-   
-  }
+
+}
 
 body {
     display: flex;
     flex-direction: column;
-    align-items:center;
+    align-items: center;
     justify-content: space-around;
-    background-color: rgb(253,234,226);
+    background-color: rgb(253, 234, 226);
 }
 
 #selected-image {
@@ -72,7 +72,7 @@ header {
 }
 
 .nav-item.selected {
-    color: rgb(233,128,130);
+    color: rgb(233, 128, 130);
     font-weight: 500;
 }
 
@@ -101,7 +101,6 @@ header {
     display: inline-block;
 }
 
-
 body {
     background-color: #f3f3f3; /* Change background color for a prettier look */
 }
@@ -119,24 +118,25 @@ body {
     margin-top: auto; /* Move thumbnail section to the bottom */
 }
 
-.weather-info, .weather-info-no-data {
-    display: none;
+.weather-details {
+    display: flex;
+    align-items: center;
+    gap: 2vh;
 }
 
-
-
 table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
 }
 
 td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
+    border: 1px solid #dddddd;
+    text-align: center;
+    padding: 8px;
 }
 
 tr:nth-child(even) {
-  background-color: #dddddd;
+    background-color: #dddddd;
 }
+

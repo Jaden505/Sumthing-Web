@@ -16,8 +16,7 @@ with open('../config.json') as f:
     config = json.load(f)
 
 app = Flask(__name__)
-app.config[
-    'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{config["user"]}:{config["password"]}@{config["host"]}:{config["port"]}/{config["database"]}'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{config["user"]}:{config["password"]}@{config["host"]}:{config["port"]}/{config["database"]}'
 app.config['UPLOAD_FOLDER'] = 'static/images'  # Update this with desired upload directory
 
 db.init_app(app)

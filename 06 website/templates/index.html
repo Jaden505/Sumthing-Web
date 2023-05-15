@@ -26,15 +26,15 @@
         <div>Coordinates: <span id="image-coordinates">40.7128° N, 74.0060° W</span>
             <img class="maps-icon" src="{{ url_for('static', filename='map.png') }}" alt="Google Maps"></div>
         <div>Contributor: <span id="image-camera">Randy Marsh</span></div>
-
-        <div class="weather-info">
-            <table>
-                <thead>Weather Info</thead>
-            </table>
-        </div>
-        <div class="weather-info-no-data"><span>Can't retrieve weather forecast, please contact an administrator</span></div>
     </div>
 </div>
+
+<div class="weather-details">
+    <div class="weather-info">
+        <table class="weather-forecast-table"></table>
+    </div>
+</div>
+
 <div class="thumbnails" onwheel="handleScroll(event)">
     {% for image in images %}
         <img class="thumbnail" src="{{ url_for('static', filename='images/' + image) }}" alt="{{ image }}"
