@@ -1,26 +1,27 @@
-async function updateSelectedImage(img) {
-    document.getElementById('selected-image').src = img.src;
+async function updateSelectedImage(selectedImage) {
+    document.getElementById('selected-image').src = selectedImage.src;
 
-
-    let original_img_src = img.src
-    let url_to_remove = "http://127.0.0.1:5000/static/images/"
+    let original_img_src = selectedImage.src
+    let url_to_remove = window.location.href + "static/images/"
     let img_name = original_img_src.replace(url_to_remove, '')
 
     const imageData = await getImageData(img_name);
+    const image = imageData[0];
 
-    const weatherForecastChart = document.querySelector("#weatherChart");
-    const weatherInfoSection = document.querySelector(".weather-info");
+    const imageWeatherDate = document.querySelector("#image-date");
+    const imageCoordinates = document.querySelector("#image-coordinates")
 
-    if (imageData[0] === undefined) {
-        weatherForecastChart.style.display = "none"
+    if (image === undefined) {
         // Clear table content, if previous image had data
 
     } else {
-        // weatherForecastTable.style.display = "block"
-        weatherInfoSection.style.display = "block"
+        const date = new Date(image.img_creation_date)
+        const dateFormatted = date.toISOString().slice(0, 10);
+        imageWeatherDate.innerHTML = dateFormatted
+        imageCoordinates.innerHTML = `${image.latitude} ° N ${image.longitude} ° W`
 
-        const forecastData = await getWeatherForecast(imageData[0].latitude, imageData[0].longitude)
-        buildWeatherGraph(forecastData);
+        const historicalData = await getHistoricalWeatherData(image.latitude, image.longitude, dateFormatted)
+        buildWeatherGraph(historicalData);
     }
 }
 
@@ -30,37 +31,20 @@ function handleScroll(event) {
     event.target.scrollBy({left: scrollAmount, behavior: 'smooth'});
 }
 
+async function getHistoricalWeatherData(latitude, longitude, date) {
+    const response = await fetch(`https://archive-api.open-meteo.com/v1/archive?latitude=${latitude}&longitude=${longitude}&start_date=${date}&end_date=${date}&hourly=temperature_2m,rain`);
 
-async function getCurrentWeatherData(query) {
-    const api_key = "2b4a3252534e0a5ccd7a7baef67120a3";
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', 'http://api.weatherstack.com/current?access_key=' + api_key + `&query=${query}`, true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            return xhr.responseText
-            // Process the response here
-        }
-    };
-    xhr.send();
-}
-
-async function getWeatherForecast(latitude, longitude) {
-    const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m`);
-
-    const date = new Date();
-
-    const currentDate = date.toISOString().slice(0, 10);
-
-    date.setDate(date.getDate() + 2);
-    const futureDate = date.toISOString().slice(0, 10);
+    const imageDate = new Date(date);
+    const currentDate = imageDate.toISOString().slice(0, 10);
 
     const responseData = await response.json();
 
-    // Extract the hourly temperature data
     const hourlyTemperature = responseData.hourly.temperature_2m;
-
-    // Extract the hourly time data
     const hourlyTime = responseData.hourly.time;
+    const hourlyRain = responseData.hourly.rain;
+
+    const hourlyTemperatureUnit = responseData.hourly_units.temperature_2m;
+    const hourlyRainUnit = responseData.hourly_units.rain;
 
     // Get the indices for the desired date range
     const startDate = new Date(currentDate + 'T00:00');
@@ -75,11 +59,15 @@ async function getWeatherForecast(latitude, longitude) {
     // Summing 1 so the last element is included
     const hourlyTemperatureRange = hourlyTemperature.slice(startIndex, endIndex + 1);
     const hourlyTimeRange = hourlyTime.slice(startIndex, endIndex + 1);
+    const hourlyRainRange = hourlyRain.slice(startIndex, endIndex + 1);
 
     // Combine the temperature and time data into an array of objects
     return hourlyTemperatureRange.map((temperature, index) => ({
         time: hourlyTimeRange[index],
+        rain: hourlyRainRange[index],
         temperature,
+        temperature_unit: hourlyTemperatureUnit,
+        rain_unit: hourlyRainUnit,
         readable_time: new Date(hourlyTimeRange[index]).toLocaleDateString() + " " + new Date(hourlyTimeRange[index]).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit"
@@ -94,9 +82,14 @@ function buildWeatherGraph(data) {
     if (chartInstance) {
         chartInstance.destroy();
     }
-    // Extract the time and temperature data from the weather data
+
     const labels = data.map(entry => entry.readable_time);
     const temperatures = data.map(entry => entry.temperature);
+    const rain = data.map(entry => entry.rain);
+
+    const temperatureUnit = data[0].temperature_unit;
+    const rainUnit = data[0].rain_unit;
+
 
     // Create a new chart instance
     const ctx = document.querySelector('#weatherChart').getContext('2d');
@@ -107,11 +100,18 @@ function buildWeatherGraph(data) {
             labels: labels,
             datasets: [
                 {
-                    label: 'Temperature',
+                    label: `Temperature (${temperatureUnit})`,
                     data: temperatures,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)', // Set the background color of the chart area
-                    borderColor: 'rgba(75, 192, 192, 1)', // Set the line color
-                    borderWidth: 1 // Set the line width in pixels
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: `Rain (${rainUnit})`,
+                    data: rain,
+                    backgroundColor: 'rgba(45, 85, 255, 0.2)',
+                    borderColor: 'rgba(45, 85, 255, 1)',
+                    borderWidth: 1
                 }
             ]
         },
