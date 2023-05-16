@@ -12,7 +12,7 @@ async function updateSelectedImage(selectedImage) {
     const imageCoordinates = document.querySelector("#image-coordinates")
 
     if (image === undefined) {
-        // Clear table content, if previous image had data
+        // Add error message, if image has no lat/long
 
     } else {
         const date = new Date(image.img_creation_date)
@@ -94,26 +94,30 @@ function buildWeatherGraph(data) {
     // Create a new chart instance
     const ctx = document.querySelector('#weatherChart').getContext('2d');
 
+    // Define the dataset options for the temperature dataset
+    const temperatureDatasetOptions = {
+        label: `Temperature (${temperatureUnit})`,
+        data: temperatures,
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1,
+    };
+
+    // Define the dataset options for the rain dataset
+    const rainDatasetOptions = {
+        label: `Rain (${rainUnit})`,
+        data: rain,
+        backgroundColor: 'rgba(45, 85, 255, 0.2)',
+        borderColor: 'rgba(45, 85, 255, 1)',
+        borderWidth: 1,
+    };
+
+    // Create the chart with the updated dataset options
     chartInstance = new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
-            datasets: [
-                {
-                    label: `Temperature (${temperatureUnit})`,
-                    data: temperatures,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                },
-                {
-                    label: `Rain (${rainUnit})`,
-                    data: rain,
-                    backgroundColor: 'rgba(45, 85, 255, 0.2)',
-                    borderColor: 'rgba(45, 85, 255, 1)',
-                    borderWidth: 1
-                }
-            ]
+            datasets: [temperatureDatasetOptions, rainDatasetOptions],
         },
         options: {
             responsive: true, // Make the chart responsive
@@ -125,16 +129,10 @@ function buildWeatherGraph(data) {
                     position: 'top'
                 }
             },
-        }
+        },
     });
 }
 
-
-/**
- * Retrieves image data by calling the API
- * @param img_name - image name
- * @returns {Promise<void>} - data of the image
- */
 async function getImageData(img_name) {
     const response = await fetch(`http://127.0.0.1:5000/get_image_data?query=${img_name}`);
     return await response.json();
