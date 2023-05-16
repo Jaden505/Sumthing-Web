@@ -54,7 +54,7 @@ def get_image_data():
         data_list = [
             {'proof_key': item.proof_key,
              'img_name': item.img_name,
-             'created_at': item.created_at,
+             'img_creation_date': item.img_creation_date,
              'latitude': round(float(item.img_latitude), 2),
              'longitude': round(float(item.img_longitude), 2),
              'altitude': item.img_altitude}
