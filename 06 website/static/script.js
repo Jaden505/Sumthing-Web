@@ -1,30 +1,26 @@
-async function updateSelectedImage(img) {
-    document.getElementById('selected-image').src = img.src;
+async function updateSelectedImage(selectedImage) {
+    document.getElementById('selected-image').src = selectedImage.src;
 
-
-    let original_img_src = img.src
+    let original_img_src = selectedImage.src
     let url_to_remove = window.location.href + "static/images/"
     let img_name = original_img_src.replace(url_to_remove, '')
 
     const imageData = await getImageData(img_name);
     const image = imageData[0];
 
-    const weatherForecastChart = document.querySelector("#weatherChart");
-    const weatherInfoSection = document.querySelector(".weather-info");
+    const imageWeatherDate = document.querySelector("#image-date");
+    const imageCoordinates = document.querySelector("#image-coordinates")
 
     if (image === undefined) {
-        weatherForecastChart.style.display = "none"
         // Clear table content, if previous image had data
 
     } else {
-        // weatherForecastTable.style.display = "block"
-        weatherInfoSection.style.display = "block"
-
         const date = new Date(image.img_creation_date)
         const dateFormatted = date.toISOString().slice(0, 10);
+        imageWeatherDate.innerHTML = dateFormatted
+        imageCoordinates.innerHTML = `${image.latitude} ° N ${image.longitude} ° W`
 
         const historicalData = await getHistoricalWeatherData(image.latitude, image.longitude, dateFormatted)
-        console.log(historicalData)
         buildWeatherGraph(historicalData);
     }
 }
