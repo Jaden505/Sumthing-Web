@@ -12,12 +12,12 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-with open('../config.json') as f:
+with open('/Users/ayoubezzaouia/sumting-1/config.json') as f:
     config = json.load(f)
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{config["user"]}:{config["password"]}@{config["host"]}:{config["port"]}/{config["database"]}'
-app.config['UPLOAD_FOLDER'] = 'static/images'  # Update this with desired upload directory
+app.config['UPLOAD_FOLDER'] = '/Users/ayoubezzaouia/sumting-1/06 website/static/images'  # Update this with desired upload directory
 
 db.init_app(app)
 
@@ -33,17 +33,23 @@ def anomaly_check():
     return render_template("anomaly_check.html")
 
 
-@app.route('/upload', methods=['POST'])
-def upload_file():
-    if 'image' not in request.files:
-        return 'No file part'
-    file = request.files['image']
-    if file.filename == '':
-        return 'No selected file'
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        return 'File uploaded successfully'
+@app.route('/upload_images', methods=['POST'])
+def upload_images():
+    if 'images' not in request.files:
+        return jsonify({"error": "No file part in received request"}), 400
+
+    files = request.files.getlist('images')
+    filenames = []
+    for file in files:
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            filenames.append(filename)
+
+    if filenames:
+        return jsonify({"message": "Files uploaded successfully", "filenames": filenames}), 200
+    else:
+        return jsonify({"error": "No valid image files received"}), 400
 
 
 @app.route('/get_image_data', methods=['GET'])
@@ -65,4 +71,4 @@ def get_image_data():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000, host='0.0.0.0', threaded=True, use_reloader=True)
+    app.run(debug=True, port=5001, host='0.0.0.0', threaded=True, use_reloader=True)

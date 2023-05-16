@@ -10,13 +10,13 @@
 <header>
     <img class="logo" src="{{ url_for('static', filename='logo.webp') }}" alt="Logo">
     <nav class="nav">
-        <span class="nav-item">Individual</span>
-        <span class="nav-item">Business</span>
-        <span class="nav-item">Project</span>
-        <span class="nav-item">Impact</span>
-        <span class="nav-item selected">Pictures</span>
-        <span class="nav-item">Contribute Now</span>
-        <span class="nav-item">Anomaly detection</span>
+        <a class="nav-item" href="#individual">Individual</a>
+        <a class="nav-item" href="#business">Business</a>
+        <a class="nav-item" href="#project">Project</a>
+        <a class="nav-item" href="#impact">Impact</a>
+        <a class="nav-item selected" href="#pictures">Pictures</a>
+        <a class="nav-item" href="#contribute">Contribute Now</a>
+        <a class="nav-item" href="{{ url_for('anomaly_check') }}">Anomaly detection</a>
     </nav>
 </header>
 <div class="image-details">
