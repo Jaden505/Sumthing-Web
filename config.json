@@ -1,9 +1,0 @@
-{
-    "pictures_dir": "/Users/ayoubezzaouia/Desktop/trees",
-    "user": "postgres",
-    "password": "ezzaouia1612",
-    "host": "localhost",
-    "port": "5432",
-    "database": "postgres",
-    "folder_name": "Outliers"
-}
