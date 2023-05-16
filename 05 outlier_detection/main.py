@@ -45,7 +45,7 @@ if __name__ == "__main__":
         combined_features = np.concatenate((features, color_histograms, lbp_features, cnn_features), axis=1)
 
         # Identify outliers
-        contamination = 0.1
+        contamination = 0.5
         outliers = identify_outliers(combined_features, filenames, contamination=contamination)
 
         if len(outliers) == 0:
@@ -55,3 +55,11 @@ if __name__ == "__main__":
             outliers_sorted = sorted(outliers, key=lambda x: x[1], reverse=True)
             for filename, score in outliers_sorted:
                 print(f"{filename} - Score: {score}")
+
+            # Export all image scores to a separate file
+            scores_file_path = "image_scores.txt"
+            with open(scores_file_path, "w") as file:
+                for filename, score in outliers_sorted:
+                    file.write(f"{filename} - Score: {score}\n")
+
+            print(f"All image scores exported to {scores_file_path}.")
