@@ -31,7 +31,7 @@
 
 <div class="weather-details">
     <div class="weather-info">
-        <table class="weather-forecast-table"></table>
+        <canvas id="weatherChart"></canvas>
     </div>
 </div>
 
@@ -42,5 +42,8 @@
     {% endfor %}
 </div>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
 </body>
 </html>

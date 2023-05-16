@@ -140,3 +140,8 @@ tr:nth-child(even) {
     background-color: #dddddd;
 }
 
+#weatherChart{
+    width: 800px;
+    height: 400px;
+}
+
