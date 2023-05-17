@@ -31,7 +31,7 @@ def GetTrainingData():
     # Image name changer makes sure that the photo's names change to have a number infront.
     # This numnber corresponds to the weather seen on the picture
     # ( Cloudy( 0 ), Sunny( 1 ), Rainy( 2 ), Snowy( 3 ), Foggy( 4 ))
-    image_name_changer(path_for_changer, "jpg", path_to_save)
+    # image_name_changer(path_for_changer, "jpg", path_to_save)
 
     for filename in os.listdir(path_to_save):
         if filename.split('.')[1] == 'JPG':
@@ -80,7 +80,7 @@ def CreateModel():
     modifiableModel.add(MaxPooling2D(2))
     modifiableModel.add(Flatten())
     modifiableModel.add(Dense(256, activation="relu"))
-    modifiableModel.add(Dense(5, activation='softmax'))
+    modifiableModel.add(Dense(4, activation='softmax'))
 
     modifiableModel.compile(opt, loss=tf.losses.BinaryCrossentropy(), metrics=['accuracy'])
     return modifiableModel
@@ -108,8 +108,7 @@ def train_model():
 
     predict = model.predict(check_image)
 
-    # ( Cloudy( 0 ), Sunny( 1 ), Rainy( 2 ), Snowy( 3 ), Foggy( 4 ))
-    output = {0: 'Cloudy', 1: 'Sunny', 2: 'Rainy', 3: 'Snowy', 4: "Foggy"}
+    output = {0: 'Cloudy', 1: 'Foggy', 2: 'Rainy', 3: 'Sunny'}
 
     print("Actual :- ", check_label)
     print("Predicted :- ", output[np.argmax(predict)])
