@@ -22,3 +22,5 @@ update_dataset/
 
 03 weather_prediction/dataset/
 03 weather_prediction/updated_dataset/
+
+__pycache__
