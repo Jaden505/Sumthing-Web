@@ -2,18 +2,28 @@ from weather_CNN import GetTrainingData
 
 from keras.models import load_model
 import matplotlib.pyplot as plt
+import pandas as pd
 
 # Load the saved model
 model = load_model('Saved_model_weather')
+history = pd.read_csv('training_hist.log', sep=',', engine='python')
+accuracy = history['accuracy']
+loss = history['loss']
 
-# Get the test data
-_, x_test, _, y_test = GetTrainingData()
+def plot_accuracy(history):
+    plt.plot(accuracy)
+    plt.title('Training History Accuracy')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy')
+    plt.show()
 
-# Evaluate the model on the test data
-loss, accuracy = model.evaluate(x_test, y_test)
+def plot_loss(loss):
+    plt.plot(loss)
+    plt.title('Training History Loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.show()
 
-# Display the accuracy in a graph
-plt.bar(['Accuracy'], [accuracy])
-plt.ylim([0, 1])
-plt.title('Model Accuracy')
-plt.show()
+if __name__ == '__main__':
+    plot_accuracy(history)
+    plot_loss(loss)
