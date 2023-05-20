@@ -10,14 +10,14 @@ history = pd.read_csv('training_hist.log', sep=',', engine='python')
 accuracy = history['accuracy']
 loss = history['loss']
 
-def plot_accuracy(history):
+def plot_accuracy():
     plt.plot(accuracy)
     plt.title('Training History Accuracy')
     plt.xlabel('Epoch')
     plt.ylabel('Accuracy')
     plt.show()
 
-def plot_loss(loss):
+def plot_loss():
     plt.plot(loss)
     plt.title('Training History Loss')
     plt.xlabel('Epoch')
@@ -25,5 +25,5 @@ def plot_loss(loss):
     plt.show()
 
 if __name__ == '__main__':
-    plot_accuracy(history)
-    plot_loss(loss)
+    plot_accuracy()
+    plot_loss()
