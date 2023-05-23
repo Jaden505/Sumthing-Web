@@ -3,9 +3,8 @@ from sqlalchemy import delete, update
 from sqlalchemy.orm import sessionmaker
 from db_ORM import Base
 import dotenv
-import os
 
-from db_ORM import Batch, AllImage
+from db_ORM import AllImage
 
 dotenv.load_dotenv()
 
