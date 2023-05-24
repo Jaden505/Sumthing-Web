@@ -134,7 +134,7 @@ function buildWeatherGraph(data) {
 }
 
 async function getImageData(img_name) {
-    const response = await fetch(`http://127.0.0.1:5000/get_image_data?query=${img_name}`);
+    const response = await fetch(`http://127.0.0.1:5001/get_image_data?query=${img_name}`);
     return await response.json();
 }
 
