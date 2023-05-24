@@ -12,12 +12,12 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-with open('/Users/ayoubezzaouia/sumting-1/config.json') as f:
+with open('config.json') as f:
     config = json.load(f)
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{config["user"]}:{config["password"]}@{config["host"]}:{config["port"]}/{config["database"]}'
-app.config['UPLOAD_FOLDER'] = '/Users/ayoubezzaouia/sumting-1/06 website/static/images'  # Update this with desired upload directory
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{config["PG_user"]}:{config["PG_password"]}@{config["PG_host"]}:{config["PG_port"]}/{config["PG_database"]}'
+app.config['UPLOAD_FOLDER'] = '06 website/static/images'  # Update this with desired upload directory
 
 db.init_app(app)
 
