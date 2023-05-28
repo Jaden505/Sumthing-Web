@@ -11,13 +11,7 @@ dotenv.load_dotenv()
 with open('config.json') as f:
     config = json.load(f)
 
-user = config['PG_user']
-password = config['PG_password']
-host = config['PG_host']
-port = config['PG_port']
-database = config['PG_database']
-
-url = f'postgresql://{user}:{password}@{host}:{port}/{database}'
+url = f'postgresql://{config["user"]}:{config["password"]}@{config["host"]}:{config["port"]}/{config["database"]}'
 
 
 def connect_database(url):
@@ -38,26 +32,6 @@ def create_tables(engine):
     Base.metadata.create_all(engine)
 
 
-def upload_db_orm(picture_list):
-    if conn:
-        Session = sessionmaker(bind=engine)
-        session = Session()
-
-        session.add_all(picture_list)
-        session.commit()
-    return None
-
-
-def upload_all_images(picture_list):
-    if conn:
-        Session = sessionmaker(bind=engine)
-        session = Session()
-
-        session.add_all(picture_list)
-        session.commit()
-    return None
-
-
 def delete_image(proof_key):
     stmt = (
         delete(ProofTable).
@@ -65,6 +39,7 @@ def delete_image(proof_key):
     )
 
     conn.execute(stmt)
+    conn.commit()
 
     return True
 
@@ -153,3 +128,6 @@ def insert_weather_(batch_key2, date, weather, hour):
     stmt = (insert(WeatherData).
             values(date=date,weather_desc=weather,three_hourly=hour, batch_key = batch_key2))
     conn.execute(stmt)
+
+    conn.commit()
+    conn.close()
