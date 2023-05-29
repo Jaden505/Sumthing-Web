@@ -1,61 +1,54 @@
-import boto3
-import json
+import boto3, json, os
+from PIL import Image
 
-# Read AWS credentials and bucket configuration from JSON file
-with open('config.json') as config_file:
-    config = json.load(config_file)
-    aws_access_key_id = config['AWS_access_key_id']
-    aws_secret_access_key = config['AWS_secret_access_key']
-    bucket_name = config['bucket_name']
+def conn_AWS():
+    # Read AWS credentials and bucket configuration from JSON file
+    with open('../config.json') as config_file:
+        config = json.load(config_file)
+        aws_access_key_id = config['AWS_access_key_id']
+        aws_secret_access_key = config['AWS_secret_access_key']
+        bucket_name = config['bucket_name']
 
-# Create an S3 client using the credentials
-s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
+    s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
+    return s3, bucket_name
 
-def create_object(folder_name, file_path):
-    """
-    Uploads a file to the specified folder in the S3 bucket.
-    """
+def upload_img(s3, bucket_name, folder_name, file_path):
     s3.upload_file(file_path, bucket_name, folder_name + '/' + file_path)
 
-def read_objects(folder_name):
-    """
-    Retrieves a list of objects from the specified folder in the S3 bucket.
-    """
+def get_images(s3, bucket_name, folder_name):
     response = s3.list_objects(Bucket=bucket_name, Prefix=folder_name + '/')
     objects = []
     if 'Contents' in response:
         objects = [obj['Key'] for obj in response['Contents']]
     return objects
 
-def update_object(folder_name, file_path):
-    """
-    Updates an existing file in the specified folder in the S3 bucket.
-    """
+def update_img(s3, bucket_name, folder_name, file_path):
     s3.upload_file(file_path, bucket_name, folder_name + '/' + file_path)
 
-def delete_object(folder_name, file_name):
-    """
-    Deletes a file from the specified folder in the S3 bucket.
-    """
+def del_img(s3, bucket_name, folder_name, file_name):
     s3.delete_object(Bucket=bucket_name, Key=folder_name + '/' + file_name)
 
-# Example usage
-folder_name = '<FOLDER_NAME>'
-file_path = '/path/to/image.jpg'
+def upload_weather_images(s3, bucket_name, folder_name, local_folder_path):
+    image_name_changer(local_folder_path, '.jpg', local_folder_path)
 
-# Create an object in the specified folder
-# create_object(folder_name, file_path)
+    for filename in os.listdir(local_folder_path):
+        file_path = os.path.join(local_folder_path, filename)
+        s3.upload_file(file_path, bucket_name, folder_name + '/' + filename)
 
-# Get all images from the 'plastic' folder
-plastic_images = read_objects('plastic')
-print("Plastic folder contents:", plastic_images)
+def image_name_changer(directory, file_ends_with, dir_to_save_in):
+    for folder_name in os.listdir(directory):
+        for filename in os.listdir(os.path.join(directory, folder_name)):
+            if filename.endswith(file_ends_with):
+                joined_path = os.path.join(directory, folder_name, filename)
+                im = Image.open(joined_path)
+                name = folder_name + "_" + filename.split(".")[0] + '.JPG'
+                try:
+                    im.save(os.path.join(dir_to_save_in, name))
+                except Exception as err:
+                    print('Something went wrong trying to save the updated image.')
 
-# Get all images from the 'trees' folder
-trees_images = read_objects('trees')
-print("Trees folder contents:", trees_images)
+                os.remove(joined_path)
+                continue
+            else:
+                continue
 
-# Update an existing object in the specified folder
-# update_object(folder_name, file_path)
-
-# Delete an object from the specified folder
-# delete_object(folder_name, 'image.jpg')

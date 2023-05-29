@@ -12,38 +12,39 @@ from sklearn.model_selection import train_test_split
 from matplotlib import pyplot as plt
 import tensorflow as tf
 
-from convert_to_jpg import image_name_changer
+from AWS_CRUD import get_images, conn_AWS
 
 np.random.seed(1)
 
-
-def GetTrainingData():
+def DownloadWeatherImages(local_folder):
     train_images = []
     train_labels = []
-    img_size = 300
-    shape = (img_size, img_size)
+    shape = (300, 300)
+    AWS_folder = 'weather/updated_dataset'
 
-    # Path for changer should be the path where all images are saved at first
-    path_for_changer = "dataset"
-    # Path to save should be the path where all new images should be saved to
-    path_to_save = "updated_dataset"
+    s3, bucket_name = conn_AWS()
+    os.mkdir(local_folder)
 
-    # Image name changer makes sure that the photo's names change to have a number infront.
-    # This numnber corresponds to the weather seen on the picture
-    # ( Cloudy( 0 ), Sunny( 1 ), Rainy( 2 ), Snowy( 3 ), Foggy( 4 ))
-    # image_name_changer(path_for_changer, "jpg", path_to_save)
+    for image_path in get_images(s3, bucket_name, AWS_folder):
+        if image_path.lower().endswith('.jpg') or image_path.lower().endswith(
+                '.jpeg') or image_path.lower().endswith('.png'):
+            local_filepath = os.path.join(local_folder, os.path.basename(image_path))
+            s3.download_file(bucket_name, image_path, local_filepath)
 
-    for filename in os.listdir(path_to_save):
-        if filename.split('.')[1] == 'JPG':
-            img = cv2.imread(os.path.join(path_to_save, filename))
-
-            # Spliting file names and storing the labels for image in list
-            train_labels.append(filename.split('_')[0])
-
-            # Resize all images to a specific shape
+            img = cv2.imread(local_filepath)
+            train_labels.append(os.path.basename(image_path).split('_')[0])
             img = cv2.resize(img / 255, shape)
-
             train_images.append(img)
+
+    return train_images, train_labels
+
+def GetTrainingData():
+    local_folder = 'weather_data'
+
+    if os.path.isdir(local_folder):
+        print('weather_data directory already exists.')
+    else:
+        train_images, train_labels = DownloadWeatherImages(local_folder)
 
     # Converting labels into One Hot encoded sparse matrix
     train_labels = pd.get_dummies(train_labels).values
@@ -84,6 +85,7 @@ def CreateModel():
 
     modifiableModel.compile(opt, loss=tf.losses.BinaryCrossentropy(), metrics=['accuracy'])
     return modifiableModel
+
 
 def train_model():
     path_to_save = os.path.join(os.getcwd(), "Saved_model_weather")
