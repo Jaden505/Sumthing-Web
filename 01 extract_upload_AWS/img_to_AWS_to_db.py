@@ -1,13 +1,10 @@
-import os, re
-import pandas as pd
+import os
 from PIL import Image
 
 from helper_img_metadata import *
 from helper_img_to_aws import upload_image_to_aws
-from convert_to_jpg import resizer
 from db_ORM import AllImage
 import datetime as dt
-import random
 
 
 # Extract metadata from image
