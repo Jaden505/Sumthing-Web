@@ -12,7 +12,7 @@ from sklearn.model_selection import train_test_split
 from matplotlib import pyplot as plt
 import tensorflow as tf
 
-from AWS_CRUD import get_images, conn_AWS
+from AWS_CRUD import conn_AWS, read_images_from_s3, DownloadWeatherImages
 
 np.random.seed(1)
 

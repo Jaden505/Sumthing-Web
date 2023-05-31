@@ -8,7 +8,7 @@ import datetime as dt
 
 
 # Extract metadata from image
-def get_image_metadata(filepath, batch_id):
+def get_image_metadata(filepath):
     filename = os.path.basename(filepath)
 
     dict = {}
@@ -16,7 +16,8 @@ def get_image_metadata(filepath, batch_id):
     dict['proof_image_name'] = filename
 
     # batch key
-    dict['batch_key'] = batch_id
+    batch_id=filename.split('_',1)[0]
+    dict['batch_key']=batch_id
 
     img = Image.open(filepath)
     exif_data = get_exif_data(img)
@@ -27,13 +28,13 @@ def get_image_metadata(filepath, batch_id):
     # img datetime
     exif_datetime = get_datetime(exif_data)
     datetime = dt.datetime.strptime(exif_datetime, '%Y:%m:%d %H:%M:%S')
-    dict['img_creation_date'] = datetime
+    dict['proof_date'] = datetime
 
     # lat, lon
     lat, lon, alt = get_lat_lon_alt(exif_data)
-    dict['img_latitude'] = lat
-    dict['img_longitude'] = lon
-    dict['img_altitude'] = alt
+    dict['latitude'] = lat
+    dict['longitude'] = lon
+    dict['altitude'] = alt
 
     #format
     dict['img_format'] = img.format

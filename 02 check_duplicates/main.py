@@ -37,4 +37,4 @@ def main(dirname):
     # clean_up(dirname)
 
 
-main('../Pictures')
+main('../zipimages')

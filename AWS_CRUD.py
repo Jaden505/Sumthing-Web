@@ -1,5 +1,4 @@
 import boto3, json, os
-from PIL import Image
 import numpy as np
 import cv2
 
@@ -70,29 +69,3 @@ def DownloadWeatherImages(local_folder):
             train_images.append(img)
 
     return train_images, train_labels
-
-
-def upload_weather_images(s3, bucket_name, folder_name, local_folder_path):
-    image_name_changer(local_folder_path, '.jpg', local_folder_path)
-
-    for filename in os.listdir(local_folder_path):
-        file_path = os.path.join(local_folder_path, filename)
-        s3.upload_file(file_path, bucket_name, folder_name + '/' + filename)
-
-def image_name_changer(directory, file_ends_with, dir_to_save_in):
-    for folder_name in os.listdir(directory):
-        for filename in os.listdir(os.path.join(directory, folder_name)):
-            if filename.endswith(file_ends_with):
-                joined_path = os.path.join(directory, folder_name, filename)
-                im = Image.open(joined_path)
-                name = folder_name + "_" + filename.split(".")[0] + '.JPG'
-                try:
-                    im.save(os.path.join(dir_to_save_in, name))
-                except Exception as err:
-                    print('Something went wrong trying to save the updated image.')
-
-                os.remove(joined_path)
-                continue
-            else:
-                continue
-
