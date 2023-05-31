@@ -6,10 +6,9 @@ from db_ORM import Base
 from db_ORM import Batch, AllImage
 from helper_batch import get_center_of_batch, get_first_last_date_from_batch
 
-import json
+from config import load_config
 
-with open('config.json') as f:
-    config = json.load(f)
+config = load_config("../config.json")
 url = f'postgresql://{config["user"]}:{config["password"]}@{config["host"]}:{config["port"]}/{config["database"]}'
 
 

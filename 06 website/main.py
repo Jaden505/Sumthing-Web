@@ -1,8 +1,8 @@
-import json
 import os
 
 from flask import Flask, render_template, jsonify, request
 from werkzeug.utils import secure_filename
+from config import load_config
 
 from models.proof import Proof, db
 
@@ -12,12 +12,13 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-with open('/Users/ayoubezzaouia/sumting-1/config.json') as f:
-    config = json.load(f)
+config = load_config("../config.json")
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{config["user"]}:{config["password"]}@{config["host"]}:{config["port"]}/{config["database"]}'
-app.config['UPLOAD_FOLDER'] = '/Users/ayoubezzaouia/sumting-1/06 website/static/images'  # Update this with desired upload directory
+app.config[
+    'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{config["user"]}:{config["password"]}@{config["host"]}:{config["port"]}/{config["database"]}'
+app.config[
+    'UPLOAD_FOLDER'] = '../06 website/static/images'  # Update this with desired upload directory
 
 db.init_app(app)
 
