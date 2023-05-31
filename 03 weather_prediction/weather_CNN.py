@@ -12,43 +12,29 @@ from sklearn.model_selection import train_test_split
 from matplotlib import pyplot as plt
 import tensorflow as tf
 
-from convert_to_jpg import image_name_changer
+from AWS_CRUD import get_images, conn_AWS
 
 np.random.seed(1)
 
+def GetTrainingData(dowload=True):
+    aws_folder = 'weather/updated_dataset'
+    local_folder = 'weather_data'
+    s3, bucket_name = conn_AWS()
 
-def GetTrainingData():
-    train_images = []
-    train_labels = []
-    img_size = 300
-    shape = (img_size, img_size)
 
-    # Path for changer should be the path where all images are saved at first
-    path_for_changer = "dataset"
-    # Path to save should be the path where all new images should be saved to
-    path_to_save = "updated_dataset"
+    print('Getting images from S3...')
 
-    # Image name changer makes sure that the photo's names change to have a number infront.
-    # This numnber corresponds to the weather seen on the picture
-    # ( Cloudy( 0 ), Sunny( 1 ), Rainy( 2 ), Snowy( 3 ), Foggy( 4 ))
-    # image_name_changer(path_for_changer, "jpg", path_to_save)
+    if os.path.isdir(local_folder):
+        print('weather_data directory already exists.')
+    elif dowload:
+        print('Downloading weather images')
+        train_images, train_labels = DownloadWeatherImages(local_folder)
+    else:
+        print('Getting weather images encoded, not downloading to local path')
+        train_images, train_labels = read_images_from_s3(s3, bucket_name, aws_folder)
 
-    for filename in os.listdir(path_to_save):
-        if filename.split('.')[1] == 'JPG':
-            img = cv2.imread(os.path.join(path_to_save, filename))
-
-            # Spliting file names and storing the labels for image in list
-            train_labels.append(filename.split('_')[0])
-
-            # Resize all images to a specific shape
-            img = cv2.resize(img / 255, shape)
-
-            train_images.append(img)
-
-    # Converting labels into One Hot encoded sparse matrix
-    train_labels = pd.get_dummies(train_labels).values
-
-    # Converting train_images to array
+    # Converting labels into One Hot encoded sparse matrix and images into numpy array
+    train_labels = pd.get_dummies(train_labels).values.reshape(-1, 4)
     train_images = np.array(train_images)
 
     # Splitting Training data into train and validation dataset
@@ -64,7 +50,7 @@ def GetTrainingData():
 def CreateModel():
     modifiableModel = Sequential()
 
-    opt = Adam(learning_rate=0.0005)
+    opt = Adam(learning_rate=0.001)
     kernel_size = 2
     modifiableModel.add(Conv2D(16, (kernel_size,kernel_size), 1, activation="relu", input_shape=(300, 300, 3)))
     modifiableModel.add(MaxPooling2D(2))
@@ -74,9 +60,9 @@ def CreateModel():
     modifiableModel.add(Conv2D(128, (kernel_size,kernel_size), 1, activation="relu"))
     modifiableModel.add(Conv2D(128, (kernel_size,kernel_size), 1, activation="relu"))
     modifiableModel.add(Conv2D(264, (kernel_size,kernel_size), 1, activation="relu"))
-    modifiableModel.add(Conv2D(264, (kernel_size,kernel_size), 1, activation="relu"))
-    modifiableModel.add(Conv2D(264, (kernel_size,kernel_size), 1, activation="relu"))
-    modifiableModel.add(Conv2D(264, (kernel_size,kernel_size), 1, activation="relu"))
+    # modifiableModel.add(Conv2D(264, (kernel_size,kernel_size), 1, activation="relu"))
+    # modifiableModel.add(Conv2D(264, (kernel_size,kernel_size), 1, activation="relu"))
+    # modifiableModel.add(Conv2D(264, (kernel_size,kernel_size), 1, activation="relu"))
     modifiableModel.add(MaxPooling2D(2))
     modifiableModel.add(Flatten())
     modifiableModel.add(Dense(256, activation="relu"))
@@ -84,6 +70,7 @@ def CreateModel():
 
     modifiableModel.compile(opt, loss=tf.losses.BinaryCrossentropy(), metrics=['accuracy'])
     return modifiableModel
+
 
 def train_model():
     path_to_save = os.path.join(os.getcwd(), "Saved_model_weather")
@@ -97,7 +84,7 @@ def train_model():
     callbacks = [checkpoint, monitor_val_acc]
     x_train, x_test, y_train, y_test = GetTrainingData()
     model = CreateModel()
-    model.fit(x_train, y_train, epochs=30, batch_size=100, validation_split=0.2, callbacks=callbacks)
+    model.fit(x_train, y_train, epochs=20, batch_size=64, validation_split=0.2, callbacks=callbacks)
 
     # Testing predictions and the actual label
 

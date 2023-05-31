@@ -12,7 +12,7 @@ import json
 with open('config.json') as f:
     config = json.load(f)
 
-url = f'postgresql://{config["user"]}:{config["password"]}@{config["host"]}:{config["port"]}/{config["database"]}'
+url = f'postgresql://{config["PG_user"]}:{config["PG_password"]}@{config["PG_host"]}:{config["PG_port"]}/{config["PG_database"]}'
 
 engine, conn = connect_database(url)
 create_tables(engine)
@@ -81,7 +81,7 @@ if __name__ == "__main__":
     plastic_key = batch_to_db(config['pictures_dir'] + '/plastic/batch 1')
     trees_key = batch_to_db(config['pictures_dir'] + '/trees')
 
-    metadata_to_db(config['pictures_dir'] + '/plastic/batch 1', plastic_key)
-    metadata_to_db(config['pictures_dir'] + '/trees', trees_key)
+    metadata_to_db('Pictures' + '/plastic/batch 1', plastic_key)
+    metadata_to_db('Pictures' + '/trees', trees_key)
 
     conn.close()

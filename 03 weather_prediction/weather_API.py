@@ -1,11 +1,12 @@
 import requests
+import json
 import pprint
-from config import load_config
 
-config = load_config('../config.json')
+api_key = open(r"api_key").read()
+
 
 def get_weather_data(lat_long, date):
-    url = f'http://api.weatherstack.com/current?access_key={config["weather-api-key"]}&query={lat_long}&historical_date={date}'
+    url = f'http://api.weatherstack.com/current?access_key={api_key}&query={lat_long}&historical_date={date}'
     res = requests.get(url)
     data = res.json()
 
@@ -16,7 +17,7 @@ def get_weather_data(lat_long, date):
 # @query: Search by latitude and longitude, example: 52.374_4.890
 # Subscription: All plans
 def get_current_weather_data(query):
-    url = f'http://api.weatherstack.com/current?access_key={config["weather-api-key"]}&query={query}'
+    url = f'http://api.weatherstack.com/current?access_key={api_key}&query={query}'
     res = requests.get(url)
     data = res.json()
 
@@ -27,7 +28,7 @@ def get_current_weather_data(query):
 # @query: Search by city name or country name
 # Subscription: Professional plan and higher
 def predict_weather(query):
-    url = f'http://api.weatherstack.com/forecast?access_key={config["weather-api-key"]}&query={query}&forecast_days=1&hourly=1'
+    url = f'http://api.weatherstack.com/forecast?access_key={api_key}&query={query}&forecast_days=1&hourly=1'
     res = requests.get(url)
     data = res.json()
 
@@ -38,7 +39,7 @@ def predict_weather(query):
 # @query: Search by city name or country name
 # Subscription: Standard plan and higher
 def location_lookup(query):
-    url = f'http://api.weatherstack.com/autocomplete?access_key={config["weather-api-key"]}&query={query}'
+    url = f'http://api.weatherstack.com/autocomplete?access_key={api_key}&query={query}'
     res = requests.get(url)
     data = res.json()
 

@@ -1,3 +1,4 @@
+import json
 import os
 
 from flask import Flask, render_template, jsonify, request
@@ -15,10 +16,8 @@ def allowed_file(filename):
 config = load_config("../config.json")
 
 app = Flask(__name__)
-app.config[
-    'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{config["user"]}:{config["password"]}@{config["host"]}:{config["port"]}/{config["database"]}'
-app.config[
-    'UPLOAD_FOLDER'] = '../06 website/static/images'  # Update this with desired upload directory
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{config["PG_user"]}:{config["PG_password"]}@{config["PG_host"]}:{config["PG_port"]}/{config["PG_database"]}'
+app.config['UPLOAD_FOLDER'] = '06 website/static/images'  # Update this with desired upload directory
 
 db.init_app(app)
 

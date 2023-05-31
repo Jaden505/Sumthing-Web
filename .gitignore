@@ -25,3 +25,6 @@ update_dataset/
 
 __pycache__
 Saved_model_weather/
+
+03\ weather_prediction/weather_data/
+weather_data/
