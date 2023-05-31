@@ -1,10 +1,8 @@
 import requests
-import json
 import pprint
+from config import load_config
 
-with open('../config.json') as f:
-    config = json.load(f)
-
+config = load_config('../config.json')
 
 def get_weather_data(lat_long, date):
     url = f'http://api.weatherstack.com/current?access_key={config["weather-api-key"]}&query={lat_long}&historical_date={date}'
