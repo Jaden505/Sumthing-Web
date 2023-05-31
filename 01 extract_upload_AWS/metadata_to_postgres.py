@@ -78,10 +78,6 @@ def metadata_to_db(image_dir, batch_key):
 
 
 if __name__ == "__main__":
-    plastic_key = batch_to_db(config['pictures_dir'] + '/plastic/batch 1')
-    trees_key = batch_to_db(config['pictures_dir'] + '/trees')
 
-    metadata_to_db('Pictures' + '/plastic/batch 1', plastic_key)
-    metadata_to_db('Pictures' + '/trees', trees_key)
 
     conn.close()

@@ -6,6 +6,41 @@ from sqlalchemy.orm import relationship
 Base = declarative_base()
 
 
+class AllImage(Base):
+    __tablename__ = 'all_images'
+
+    proof_key = sa.Column(sa.BigInteger(), primary_key=True, autoincrement=True)
+    proof_image_name = sa.Column(sa.VARCHAR())
+    proof_date = sa.Column(sa.DateTime())
+
+    latitude = sa.Column(sa.Float())
+    longitude = sa.Column(sa.Float())
+    altitude = sa.Column(sa.Float())
+    direction = sa.Column(sa.Float())
+
+    proof_small = sa.Column(sa.VARCHAR())
+    proof_medium = sa.Column(sa.VARCHAR())
+    proof_large = sa.Column(sa.VARCHAR())
+
+    proof_uploaded_datetime = sa.Column(sa.DateTime(), default=datetime.datetime.utcnow)
+
+    score_tree_not_tree = sa.Column(sa.Float())
+    score_duplicate_tree = sa.Column(sa.Float())
+    score_hash_image = sa.Column(sa.Float())
+    score_rgb_image = sa.Column(sa.Float())
+    score_weather = sa.Column(sa.Float())
+    score_total = sa.Column(sa.Float())
+
+    batch_key = sa.Column(sa.BigInteger, sa.ForeignKey('batch.batch_key'))
+
+    update_at = sa.Column(sa.DateTime(), default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+
+    valid_image_child = relationship("ValidImage", back_populates="all_image_parent", uselist=False)
+    invalid_image_child = relationship("InvalidImage", back_populates="all_image_parent", uselist=False)
+
+    batch_parent = relationship("Batch", back_populates="all_image_child")
+
+
 class ProofTable(Base):
     __tablename__ = 'proof_table'
 
