@@ -3,7 +3,7 @@ import dotenv
 import boto3
 
 from AWS_CRUD import *
-from metadata import get_image_metadata
+from metadata import get_metadata
 
 dotenv.load_dotenv()
 
@@ -30,7 +30,7 @@ def main():
         print(f'Uploaded {file_name} to AWS bucket {bucket_name}/{AWS_folder}')
 
         # Add metadata to image
-        metadata = get_image_metadata(file_path)
+        metadata = get_metadata(file_path)
         add_metadata_to_image(f'{AWS_folder}/{file}', metadata)
         print(f'Added metadata to {file_name}')
 
