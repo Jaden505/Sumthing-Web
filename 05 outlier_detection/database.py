@@ -84,10 +84,7 @@ def update_outlier_scores(database, user, password, host, port, filenames, outli
     cur = conn.cursor()
 
     for filename, outlier_score in zip(filenames, outlier_scores):
-        cur.execute(
-            "UPDATE images SET outlier_score = %s WHERE filename = %s",
-            (outlier_score, filename)
-        )
+        cur.execute("UPDATE proof_table SET check_outlier_score = %s WHERE img_name = %s", (outlier_score, filename))
 
     conn.commit()
     cur.close()

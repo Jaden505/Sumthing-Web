@@ -2,7 +2,7 @@ async function updateSelectedImage(selectedImage) {
     document.getElementById('selected-image').src = selectedImage.src;
 
     let original_img_src = selectedImage.src
-    let url_to_remove = window.location.href + "static/images/"
+    let url_to_remove = `${window.location.href}static/images/`
     let img_name = original_img_src.replace(url_to_remove, '')
 
     const imageData = await getImageData(img_name);
@@ -134,7 +134,7 @@ function buildWeatherGraph(data) {
 }
 
 async function getImageData(img_name) {
-    const response = await fetch(`http://127.0.0.1:5001/get_image_data?query=${img_name}`);
+    const response = await fetch(`${window.location.href}/get_image_data?query=${img_name}`);
     return await response.json();
 }
 

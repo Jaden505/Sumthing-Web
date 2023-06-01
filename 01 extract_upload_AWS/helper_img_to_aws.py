@@ -7,7 +7,7 @@ def upload_image_to_aws(filename, ACCESS_KEY, SECRET_KEY, bucketname):
                       aws_secret_access_key=SECRET_KEY)
     s3_filename=filename
     try:
-        s3.upload_file(filename, bucketname, s3_filename, ExtraArgs={'ACL':'public-read'})
+        s3.upload_file(filename, bucketname, s3_filename)
         return True
     except FileNotFoundError:
         print("The file was not found")
