@@ -10,9 +10,10 @@ from botocore.exceptions import NoCredentialsError
 def get_s3_client(AWS_access_key_id, AWS_secret_access_key):
     return boto3.client('s3', aws_access_key_id=AWS_access_key_id, aws_secret_access_key=AWS_secret_access_key)
 
-## incrementele database functie toevoegen 
-def clear_images_table(database, user, password, host, port):
-    conn = psycopg2.connect(database=database, user=user, password=password, host=host, port=port)
+
+# incrementele database functie toevoegen 
+def clear_images_table(PG_database, PG_user, PG_password, PG_host, PG_port):
+    conn = psycopg2.connect(database=PG_database, user=PG_user, password=PG_password, host=PG_host, port=PG_port)
     cur = conn.cursor()
 
     cur.execute("DELETE FROM images")
@@ -22,8 +23,9 @@ def clear_images_table(database, user, password, host, port):
     conn.close()
 
 
-def add_images_to_database(AWS_access_key_id, AWS_secret_access_key, AWS_bucket_name, AWS_folder_name, database, user,
-                           password, host, port):
+def add_images_to_database(AWS_access_key_id, AWS_secret_access_key, AWS_bucket_name, AWS_folder_name, PG_database,
+                           PG_user,
+                           PG_password, PG_host, PG_port):
     try:
         s3 = boto3.client('s3', aws_access_key_id=AWS_access_key_id, aws_secret_access_key=AWS_secret_access_key)
         contents = s3.list_objects(Bucket=AWS_bucket_name, Prefix=AWS_folder_name)['Contents']
@@ -38,7 +40,7 @@ def add_images_to_database(AWS_access_key_id, AWS_secret_access_key, AWS_bucket_
     filenames = []
 
     try:
-        conn = psycopg2.connect(database=database, user=user, password=password, host=host, port=port)
+        conn = psycopg2.connect(database=PG_database, user=PG_user, password=PG_password, host=PG_host, port=PG_port)
         cur = conn.cursor()
     except Exception as e:
         print("Error connecting to the database: ", e)
@@ -79,8 +81,8 @@ def add_images_to_database(AWS_access_key_id, AWS_secret_access_key, AWS_bucket_
     return np.array(images), filenames
 
 
-def update_outlier_scores(database, user, password, host, port, filenames, outlier_scores):
-    conn = psycopg2.connect(database=database, user=user, password=password, host=host, port=port)
+def update_outlier_scores(PG_database, PG_user, PG_password, PG_host, PG_port, filenames, outlier_scores):
+    conn = psycopg2.connect(database=PG_database, user=PG_user, password=PG_password, host=PG_host, port=PG_port)
     cur = conn.cursor()
 
     for filename, outlier_score in zip(filenames, outlier_scores):
