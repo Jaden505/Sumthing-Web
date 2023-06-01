@@ -4,13 +4,13 @@ import datetime as dt
 import os
 
 
-def get_first_last_date_from_batch(dir_name, batch_id):
+def get_first_last_date_from_batch(dir_name):
     last_datetime = dt.datetime(1900, 1, 1)
     first_datetime = dt.datetime.now()
 
     for file in os.listdir(dir_name):
         path = os.path.join(dir_name, file)
-        metadata = get_image_metadata(path, batch_id)
+        metadata = get_image_metadata(path)
         if metadata is None:
             continue
 
@@ -27,14 +27,14 @@ def get_first_last_date_from_batch(dir_name, batch_id):
     return first_datetime, last_datetime
 
 
-def get_center_of_batch(dir_name, batch_id):
+def get_center_of_batch(dir_name):
     total_lon = 0
     total_lat = 0
     count = 0
 
     for index, file in enumerate(os.listdir(dir_name)):
         path = os.path.join(dir_name, file)
-        metadata = get_image_metadata(path, batch_id)
+        metadata = get_image_metadata(path)
 
         if metadata is None or metadata['img_latitude'] is None or metadata['img_longitude'] is None:
             continue
