@@ -100,8 +100,14 @@ def add_metadata_to_image(aws_path_to_image, metadata):
 
 def get_metadata_from_image(path_to_image):
     s3, bucket_name = conn_AWS()
-    print(bucket_name)
 
     response = s3.head_object(Bucket=bucket_name, Key=path_to_image)
 
     return response['Metadata']
+
+
+def update_image_score(path_to_image, score, score_type):
+    metadata = get_metadata_from_image(path_to_image)
+    metadata[score_type] = score
+
+    add_metadata_to_image(path_to_image, metadata)
