@@ -1,8 +1,7 @@
 import os
 
-from db_CRUD import update_image_score, get_metadata
 from helper_checker import *
-
+from AWS_CRUD import update_image_score, get_metadata_from_image
 
 def find_corrupted(dir):
     invalid_files = []
@@ -20,15 +19,15 @@ def find_corrupted(dir):
     return invalid_files
 
 
-def find_duplicate_coordinates(metadata, filename, invalid_files, coordinate_keys):
-    location = (metadata.latitude, metadata.longitude)
+def find_duplicate_coordinates(aws_folder, metadata, filename, invalid_files, coordinate_keys):
+    location = (float(metadata['latitude']), float(metadata['longitude']))
     nearby = check_within_one_meter(coordinate_keys.keys(), location[0], location[1])
 
     if nearby is not None:
         file_dup = coordinate_keys[nearby]
         invalid_files.append([filename, file_dup])
-        update_image_score(filename, 1, 5)
-        update_image_score(file_dup, 1, 5)
+        update_image_score(os.path.join(aws_folder, filename), 1, 'score_weather')
+        update_image_score(os.path.join(aws_folder, file_dup), 1, 'score_weather')
         print(f"found duplicate coordinates nearby: {filename} == {file_dup}")
     else:
         coordinate_keys[location] = filename
@@ -36,16 +35,17 @@ def find_duplicate_coordinates(metadata, filename, invalid_files, coordinate_key
     return coordinate_keys, invalid_files
 
 
-def find_duplicate_time(metadata, filename, invalid_files, time_keys):
-    time = metadata.proof_date
+def find_duplicate_time(aws_folder, metadata, filename, invalid_files, time_keys):
+    time = metadata['taken_date']
+    time = datetime.strptime(time, '%Y-%m-%d %H:%M:%S')
     date_times = [datetime.strptime(x, '%Y-%m-%d %H:%M:%S.%f') for x in time_keys.keys()]
     quickly = check_within_10_seconds(date_times, time)
 
     if quickly is not None:
         file_dup = time_keys[quickly.strftime('%Y-%m-%d %H:%M:%S.%f')]
         invalid_files.append([filename, file_dup])
-        update_image_score(filename, 1, 1)
-        update_image_score(file_dup, 1, 1)
+        update_image_score(os.path.join(aws_folder, filename), 1, 'score_tree_not_tree')
+        update_image_score(os.path.join(aws_folder, file_dup), 1, 'score_tree_not_tree')
         print(f"found duplicate time: {filename} == {file_dup}")
     else:
         time_keys[time.strftime('%Y-%m-%d %H:%M:%S.%f')] = filename
@@ -53,13 +53,13 @@ def find_duplicate_time(metadata, filename, invalid_files, time_keys):
     return time_keys, invalid_files
 
 
-def find_duplicate_mean(filepath, filename, invalid_files, mean_color_keys):
+def find_duplicate_mean(aws_folder, filepath, filename, invalid_files, mean_color_keys):
     mean = str(find_mean(filepath))
     if mean in mean_color_keys:
         file_dup = mean_color_keys[mean]
         invalid_files.append([filename, file_dup])
-        update_image_score(filename, 1, 4)
-        update_image_score(file_dup, 1, 4)
+        update_image_score(os.path.join(aws_folder, filename), 1, 'score_rgb_image')
+        update_image_score(os.path.join(aws_folder, file_dup), 1, 'score_rgb_image')
         print(f"found duplicate mean color value: {filename} == {file_dup}")
     else:
         mean_color_keys[mean] = filename
@@ -67,13 +67,13 @@ def find_duplicate_mean(filepath, filename, invalid_files, mean_color_keys):
     return mean_color_keys, invalid_files
 
 
-def find_duplicate_hash(filepath, filename, invalid_files, hash_keys):
+def find_duplicate_hash(aws_folder, filepath, filename, invalid_files, hash_keys):
     filehash = get_hash(filepath)
     if filehash in hash_keys:
         file_dup = hash_keys[filehash]
         invalid_files.append([filename, file_dup])
-        update_image_score(filename, 1, 3)
-        update_image_score(file_dup, 1, 3)
+        update_image_score(os.path.join(aws_folder, filename), 1, 'score_hash_image')
+        update_image_score(os.path.join(aws_folder, file_dup), 1, 'score_hash_image')
         print(f"found duplicate hash: {filename} == {file_dup}")
     else:
         hash_keys[filehash] = filename
@@ -86,6 +86,8 @@ def find_duplicates(dir_name):
     Find duplicates of images in directory by compring mean color values,
     hash of pixels, near locations, and time taken.
     """
+    aws_folder = 'AllImages'
+
     invalid_files = []
     mean_color_keys = {}
     hash_keys = {}
@@ -97,15 +99,15 @@ def find_duplicates(dir_name):
     for filename in os.listdir(dir_name):
         filepath = os.path.join(cwd, dir_name, filename)
         if os.path.isfile(filepath):
-            mean_color_keys, invalid_files = find_duplicate_mean(filepath, filename, invalid_files, mean_color_keys)
-            hash_keys, invalid_files = find_duplicate_hash(filepath, filename, invalid_files, hash_keys)
+            mean_color_keys, invalid_files = find_duplicate_mean(aws_folder, filepath, filename, invalid_files, mean_color_keys)
+            hash_keys, invalid_files = find_duplicate_hash(aws_folder, filepath, filename, invalid_files, hash_keys)
 
-            metadata = get_metadata(filename)
+            metadata = get_metadata_from_image(os.path.join(aws_folder, filename))
             if metadata is None:
                 continue
 
-            coordinate_keys, invalid_files = find_duplicate_coordinates(metadata, filename, invalid_files,
+            coordinate_keys, invalid_files = find_duplicate_coordinates(aws_folder, metadata, filename, invalid_files,
                                                                         coordinate_keys)
-            time_keys, invalid_files = find_duplicate_time(metadata, filename, invalid_files, time_keys)
+            time_keys, invalid_files = find_duplicate_time(aws_folder, metadata, filename, invalid_files, time_keys)
 
     return invalid_files

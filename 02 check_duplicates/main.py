@@ -1,40 +1,26 @@
-import os
+import os, json
 import dotenv
 
 from duplicate_check_CNN import duplicate_check_CNN
 from img_checker import find_corrupted, find_duplicates
 
-from helper_images import clean_up
-
 dotenv.load_dotenv()
 
-# postgres database
-DATABASE_TO_URI = 'postgresql://@localhost:5432/postgres'
+with open('../config.json') as config_file:
+    config = json.load(config_file)
+
+ACCESS_KEY = config['AWS_access_key_id']
+SECRET_KEY = config['AWS_secret_access_key']
+bucketname = config['bucket_name']
+
+AWS_folder = 'AllImages'
+local_folder = '../zipimages'
+
+def main():
+    find_corrupted(local_folder)
+    find_duplicates(local_folder)
+    duplicate_check_CNN(local_folder, 0.85)
 
 
-# aws image bucket
-# ACCESS_KEY = os.environ['ACCESS_KEY']
-# SECRET_KEY = os.environ['SECRET_KEY']
-# bucketname = os.environ['bucketname']
-
-
-def main(dirname):
-    # ## DOWNLOAD FROM AWS
-    # dirname = 'AWSimages'
-    # awspathname = '.\\' + dirname
-
-    for directory in os.listdir(dirname):
-        path = os.path.join(os.getcwd(), dirname, directory)
-        if os.path.isdir(path):
-            find_corrupted(path)
-            find_duplicates(path)
-
-            # check_if_tree(path)
-            # check if is look - a - like  
-            duplicate_check_CNN(path, 0.85)
-
-    # Remove all files from folder
-    # clean_up(dirname)
-
-
-main('../zipimages')
+if __name__ == '__main__':
+    main()

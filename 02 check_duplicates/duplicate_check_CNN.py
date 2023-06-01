@@ -1,8 +1,5 @@
 from imagededup.methods import CNN
-
-from db_CRUD import update_image_score
-
-
+from AWS_CRUD import update_image_score
 
 def duplicate_check_CNN(path, req_threshold):
     cnn = CNN()
@@ -11,7 +8,4 @@ def duplicate_check_CNN(path, req_threshold):
     for key, value in duplicates.items():
         if len(value) > 0:
             for image, percentage in value:
-                update_image_score(key, percentage, 2)
-
-
-
+                update_image_score(key, percentage, 'score_duplicate_tree')

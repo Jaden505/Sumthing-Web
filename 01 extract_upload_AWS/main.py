@@ -1,6 +1,5 @@
 import os, json
 import dotenv
-import boto3
 
 from AWS_CRUD import *
 from metadata import get_metadata
@@ -15,7 +14,7 @@ ACCESS_KEY = config['AWS_access_key_id']
 SECRET_KEY = config['AWS_secret_access_key']
 BUCKETNAME = config['bucket_name']
 
-local_img_folder = 'zipimages'
+local_img_folder = '../zipimages'
 AWS_folder = 'AllImages'
 
 

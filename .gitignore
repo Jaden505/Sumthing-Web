@@ -28,10 +28,6 @@ weather_data/
 
 zipimages/
 
-01 extract_upload_AWS/zipimages/
-
-01\ extract_upload_AWS/zipimages/
-
 # Compiled code files
 *.class
 *.pyc
@@ -44,7 +40,6 @@ zipimages/
 
 # Dependency folders
 node_modules/
-venv/
 
 # Configuration files
 config.ini
