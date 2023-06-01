@@ -40,47 +40,19 @@ def del_img(s3, bucket_name, folder_name, file_name):
     s3.delete_object(Bucket=bucket_name, Key=folder_name + '/' + file_name)
 
 
-def read_images_from_s3(s3, bucket_name, folder_name):
-    response = s3.list_objects_v2(Bucket=bucket_name, Prefix=folder_name + '/')
-    objects = response.get('Contents', [])
-
-    train_images = []
-    train_labels = []
-
-    for obj in objects:
-        image_key = obj['Key']
-        image_bytes = s3.get_object(Bucket=bucket_name, Key=image_key)['Body'].read()
-        np_array = np.frombuffer(image_bytes, np.uint8)
-        img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
-        train_images.append(img)
-
-        label = image_key.split('/')[1].split('_')[0]
-        train_labels.append(label)
-
-    return train_images, train_labels
-
-
-def DownloadWeatherImages(local_folder):
-    train_images = []
-    train_labels = []
-    shape = (300, 300)
-    AWS_folder = 'weather/updated_dataset'
-
+def move_image_within_s3_bucket(source_folder, destination_folder, image_filename):
     s3, bucket_name = conn_AWS()
-    os.mkdir(local_folder)
 
-    for image_path in get_images(s3, bucket_name, AWS_folder):
-        if image_path.lower().endswith('.jpg') or image_path.lower().endswith(
-                '.jpeg') or image_path.lower().endswith('.png'):
-            local_filepath = os.path.join(local_folder, os.path.basename(image_path))
-            s3.download_file(bucket_name, image_path, local_filepath)
+    # Construct the source and destination object keys
+    source_key = f"{source_folder}/{image_filename}"
+    destination_key = f"{destination_folder}/{image_filename}"
 
-            img = cv2.imread(local_filepath)
-            train_labels.append(os.path.basename(image_path).split('_')[0])
-            img = cv2.resize(img / 255, shape)
-            train_images.append(img)
+    # Copy the object to the destination folder
+    s3.copy_object(Bucket=bucket_name, CopySource={'Bucket': bucket_name, 'Key': source_key},
+                          Key=destination_key)
 
-    return train_images, train_labels
+    # Delete the object from the source folder
+    s3.delete_object(Bucket=bucket_name, Key=source_key)
 
 
 def add_metadata_to_image(aws_path_to_image, metadata):

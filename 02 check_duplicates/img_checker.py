@@ -1,21 +1,26 @@
 import os
 
 from helper_checker import *
-from AWS_CRUD import update_image_score, get_metadata_from_image
+from AWS_CRUD import update_image_score, get_metadata_from_image, move_image_within_s3_bucket
 
-def find_corrupted(dir):
+def find_corrupted(aws_folder, local_folder):
     invalid_files = []
     # check for invalid files and append them to invalid list
-    for image in os.listdir(dir):
-        img_path = os.path.join(dir, image)
-        im = None
+    for image in os.listdir(local_folder):
+        img_path = os.path.join(local_folder, image)
         try:
             im = Image.open(img_path)
             im.verify()
             im.close()
         except(IOError, OSError):
             invalid_files.append(image)
+
+            # move invalid file to invalid folder and remove locally
+            move_image_within_s3_bucket(aws_folder, 'InvalidImages', image)
+            os.remove(img_path)
+
             print("found corrupt file: ", image)
+
     return invalid_files
 
 
@@ -81,13 +86,11 @@ def find_duplicate_hash(aws_folder, filepath, filename, invalid_files, hash_keys
     return hash_keys, invalid_files
 
 
-def find_duplicates(dir_name):
+def find_duplicates(aws_folder, local_folder):
     """
     Find duplicates of images in directory by compring mean color values,
     hash of pixels, near locations, and time taken.
     """
-    aws_folder = 'AllImages'
-
     invalid_files = []
     mean_color_keys = {}
     hash_keys = {}
@@ -96,18 +99,20 @@ def find_duplicates(dir_name):
 
     cwd = os.getcwd()
 
-    for filename in os.listdir(dir_name):
-        filepath = os.path.join(cwd, dir_name, filename)
+    for filename in os.listdir(local_folder):
+        filepath = os.path.join(cwd, local_folder, filename)
         if os.path.isfile(filepath):
             mean_color_keys, invalid_files = find_duplicate_mean(aws_folder, filepath, filename, invalid_files, mean_color_keys)
             hash_keys, invalid_files = find_duplicate_hash(aws_folder, filepath, filename, invalid_files, hash_keys)
 
-            metadata = get_metadata_from_image(os.path.join(aws_folder, filename))
-            if metadata is None:
-                continue
+            try:
+                metadata = get_metadata_from_image(os.path.join(aws_folder, filename))
 
-            coordinate_keys, invalid_files = find_duplicate_coordinates(aws_folder, metadata, filename, invalid_files,
-                                                                        coordinate_keys)
-            time_keys, invalid_files = find_duplicate_time(aws_folder, metadata, filename, invalid_files, time_keys)
+                coordinate_keys, invalid_files = find_duplicate_coordinates(aws_folder, metadata, filename, invalid_files,
+                                                                            coordinate_keys)
+                time_keys, invalid_files = find_duplicate_time(aws_folder, metadata, filename, invalid_files, time_keys)
+            except Exception as e:
+                print("Error with metadata: ", e)
+                continue
 
     return invalid_files
