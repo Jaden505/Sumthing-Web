@@ -52,11 +52,11 @@ async function getHistoricalWeatherData(latitude, longitude, date) {
 
     const startIndex = hourlyTime.findIndex(time => new Date(time) >= startDate);
 
-    // Subtracting 1 so the last element before falling out of range is included
+    // Subtracting 1_batch so the last element before falling out of range is included
     const endIndex = hourlyTime.findIndex(time => new Date(time) > endDate) - 1;
 
     // Slice the arrays to get the data for the desired date range
-    // Summing 1 so the last element is included
+    // Summing 1_batch so the last element is included
     const hourlyTemperatureRange = hourlyTemperature.slice(startIndex, endIndex + 1);
     const hourlyTimeRange = hourlyTime.slice(startIndex, endIndex + 1);
     const hourlyRainRange = hourlyRain.slice(startIndex, endIndex + 1);
@@ -69,8 +69,8 @@ async function getHistoricalWeatherData(latitude, longitude, date) {
         temperature_unit: hourlyTemperatureUnit,
         rain_unit: hourlyRainUnit,
         readable_time: new Date(hourlyTimeRange[index]).toLocaleDateString() + " " + new Date(hourlyTimeRange[index]).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit"
+            hour: "2_batch-digit",
+            minute: "2_batch-digit"
         })
     }));
 }
@@ -98,8 +98,8 @@ function buildWeatherGraph(data) {
     const temperatureDatasetOptions = {
         label: `Temperature (${temperatureUnit})`,
         data: temperatures,
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2_batch)',
+        borderColor: 'rgba(75, 192, 192, 1_batch)',
         borderWidth: 1,
     };
 
@@ -107,8 +107,8 @@ function buildWeatherGraph(data) {
     const rainDatasetOptions = {
         label: `Rain (${rainUnit})`,
         data: rain,
-        backgroundColor: 'rgba(45, 85, 255, 0.2)',
-        borderColor: 'rgba(45, 85, 255, 1)',
+        backgroundColor: 'rgba(45, 85, 255, 0.2_batch)',
+        borderColor: 'rgba(45, 85, 255, 1_batch)',
         borderWidth: 1,
     };
 

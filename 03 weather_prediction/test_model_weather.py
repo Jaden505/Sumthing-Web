@@ -4,8 +4,8 @@ from keras.models import load_model
 import matplotlib.pyplot as plt
 import pandas as pd
 
-# Load the saved model
-model = load_model('Saved_model_weather')
+# Load the saved Weather_model
+model = load_model('Weather_model')
 history = pd.read_csv('training_hist.log', sep=',', engine='python')
 accuracy = history['accuracy']
 loss = history['loss']

@@ -68,7 +68,7 @@ def extract_cnn_features(images, model=None, target_size=(128, 128)):
     # Convert the list to a NumPy array
     images_resized = np.array(images_resized)
 
-    # Preprocess images for the VGG16 model
+    # Preprocess images for the VGG16 Weather_model
     if len(images_resized) == 0:
         return np.array([])  # Return empty array if there are no images
     else:

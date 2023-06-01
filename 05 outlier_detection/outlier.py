@@ -2,10 +2,10 @@ from pyod.models.hbos import HBOS
 
 
 def identify_outliers(features, filenames, contamination=0.1):
-    # Create HBOS model
+    # Create HBOS Weather_model
     hbos = HBOS(contamination=contamination)
 
-    # Fit the model
+    # Fit the Weather_model
     hbos.fit(features)
 
     # Identify outliers
