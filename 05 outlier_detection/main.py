@@ -5,7 +5,6 @@ import numpy as np
 from config import load_config
 from database import (
     add_images_to_database,
-    load_images_from_db,
     clear_images_table,
     update_outlier_scores,
 )
@@ -28,11 +27,8 @@ if __name__ == "__main__":
     # Clear the images table
     clear_images_table(**db_config)
 
-    # Populate the database with images
-    add_images_to_database(**aws_config, **db_config)
-
-    # Load images from the database
-    images, filenames = load_images_from_db(**db_config)
+    # Populate the database with images and also load into an array
+    images, filenames = add_images_to_database(**aws_config, **db_config)
 
     # Extract wavelet features and other features
     features = extract_wavelet_features(images)
