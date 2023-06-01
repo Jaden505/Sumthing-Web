@@ -6,7 +6,7 @@ import datetime as dt
 
 
 # Extract metadata from image
-def get_image_metadata(filepath):
+def get_metadata(filepath):
     filename = os.path.basename(filepath)
     dict = {}
 

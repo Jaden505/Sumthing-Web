@@ -15,7 +15,7 @@ def conn_AWS():
         aws_secret_access_key = config['AWS_secret_access_key']
         bucket_name = config['bucket_name']
 
-    s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
+    s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name='eu-north-1')
     return s3, bucket_name
 
 
@@ -98,9 +98,10 @@ def add_metadata_to_image(aws_path_to_image, metadata):
     )
 
 
-def get_image_metadata(path_to_image):
+def get_metadata_from_image(path_to_image):
     s3, bucket_name = conn_AWS()
+    print(bucket_name)
 
     response = s3.head_object(Bucket=bucket_name, Key=path_to_image)
 
-    metadata = response['Metadata']
+    return response['Metadata']
