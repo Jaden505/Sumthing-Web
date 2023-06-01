@@ -1,6 +1,11 @@
-import boto3, json, os
 import numpy as np
 import cv2
+import boto3
+import botocore
+import os
+import json
+from botocore.exceptions import NoCredentialsError
+
 
 def conn_AWS():
     # Read AWS credentials and bucket configuration from JSON file
@@ -13,8 +18,11 @@ def conn_AWS():
     s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
     return s3, bucket_name
 
+
 def upload_img(s3, bucket_name, folder_name, file_path):
-    s3.upload_file(file_path, bucket_name, folder_name + '/' + file_path)
+    file_name = os.path.basename(file_path)
+    s3.upload_file(file_path, bucket_name, f"{folder_name}/{file_name}")
+
 
 def get_images(s3, bucket_name, folder_name):
     response = s3.list_objects(Bucket=bucket_name, Prefix=folder_name + '/')
@@ -23,11 +31,14 @@ def get_images(s3, bucket_name, folder_name):
         objects = [obj['Key'] for obj in response['Contents']]
     return objects
 
+
 def update_img(s3, bucket_name, folder_name, file_path):
     s3.upload_file(file_path, bucket_name, folder_name + '/' + file_path)
 
+
 def del_img(s3, bucket_name, folder_name, file_name):
     s3.delete_object(Bucket=bucket_name, Key=folder_name + '/' + file_name)
+
 
 def read_images_from_s3(s3, bucket_name, folder_name):
     response = s3.list_objects_v2(Bucket=bucket_name, Prefix=folder_name + '/')
@@ -47,6 +58,7 @@ def read_images_from_s3(s3, bucket_name, folder_name):
         train_labels.append(label)
 
     return train_images, train_labels
+
 
 def DownloadWeatherImages(local_folder):
     train_images = []
@@ -69,3 +81,26 @@ def DownloadWeatherImages(local_folder):
             train_images.append(img)
 
     return train_images, train_labels
+
+
+def add_metadata_to_image(aws_path_to_image, metadata):
+    s3, bucket_name = conn_AWS()
+
+    # Convert metadata values to strings
+    metadata = {key: str(value) for key, value in metadata.items()}
+
+    s3.copy_object(
+        Bucket=bucket_name,
+        CopySource={'Bucket': bucket_name, 'Key': aws_path_to_image},
+        Key=aws_path_to_image,
+        Metadata=metadata,
+        MetadataDirective='REPLACE'
+    )
+
+
+def get_image_metadata(path_to_image):
+    s3, bucket_name = conn_AWS()
+
+    response = s3.head_object(Bucket=bucket_name, Key=path_to_image)
+
+    metadata = response['Metadata']

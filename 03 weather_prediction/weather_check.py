@@ -38,7 +38,7 @@ def get_weather_data(path):
         img_datetime = dt.datetime.strptime(img_datetime, "%Y:%m:%d %H:%M:%S")
         
 
-        # ( Cloudy( 0 ), Sunny( 1 ), Rainy( 2 ), Snowy( 3 ), Foggy( 4 ))
+        # ( Cloudy( 0 ), Sunny( 1_batch ), Rainy( 2_batch ), Snowy( 3 ), Foggy( 4 ))
         img = cv2.imread(os.path.join(path, filename))
         img_size = 300
         shape = (img_size, img_size)

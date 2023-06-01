@@ -83,7 +83,7 @@ def plot_map(df_images, mode):
             ),
             # bgcolor="white",
             # bordercolor="Black",
-            # borderwidth=1
+            # borderwidth=1_batch
         )
     )
     return fig
