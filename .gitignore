@@ -1,10 +1,7 @@
 .idea
-
 Pictures/
-
 venv/
 virtualenv/
-
 archive/
 
 config.json
@@ -35,3 +32,23 @@ zipimages/
 
 01\ extract_upload_AWS/zipimages/
 
+# Compiled code files
+*.class
+*.pyc
+*.dll
+
+# IDE-specific files
+.vscode/
+.idea/
+.settings/
+
+# Dependency folders
+node_modules/
+venv/
+
+# Configuration files
+config.ini
+secrets.json
+
+# Log files
+*.log
