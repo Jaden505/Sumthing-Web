@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
     aws_config = {key: config[key] for key in ["AWS_access_key_id", "AWS_secret_access_key", "AWS_bucket_name",
                                                "AWS_folder_name"]}
-    db_config = {key: config[key] for key in ["database", "user", "password", "host", "port"]}
+    db_config = {key: config[key] for key in ["PG_database", "PG_user", "PG_password", "PG_host", "PG_port"]}
 
     # Clear the images table
     clear_images_table(**db_config)
@@ -57,9 +57,9 @@ if __name__ == "__main__":
             print("Possible Outlier images:")
             outlier_filenames = [filename for filename, score in outliers]
             outlier_scores = [score for filename, score in outliers]
-            update_outlier_scores(database=db_config['database'], user=db_config['user'],
-                                  password=db_config['password'],
-                                  host=db_config['host'], port=db_config['port'], filenames=outlier_filenames,
+            update_outlier_scores(PG_database=db_config['database'], PG_user=db_config['user'],
+                                  PG_password=db_config['password'],
+                                  PG_host=db_config['host'], PG_port=db_config['port'], filenames=outlier_filenames,
                                   outlier_scores=outlier_scores)
 
             outliers_sorted = sorted(outliers, key=lambda x: x[1], reverse=True)
