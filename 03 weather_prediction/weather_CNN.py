@@ -12,9 +12,10 @@ from sklearn.model_selection import train_test_split
 from matplotlib import pyplot as plt
 import tensorflow as tf
 
-from AWS_CRUD import conn_AWS, read_images_from_s3, DownloadWeatherImages
+from AWS_CRUD import conn_AWS, read_images_from_s3_as_train_data, download_weather_train_data
 
 np.random.seed(1)
+
 
 def GetTrainingData(dowload=True):
     aws_folder = 'weather/updated_dataset'
@@ -28,10 +29,10 @@ def GetTrainingData(dowload=True):
         print('weather_data directory already exists.')
     elif dowload:
         print('Downloading weather images')
-        train_images, train_labels = DownloadWeatherImages(local_folder)
+        train_images, train_labels = download_weather_train_data(local_folder)
     else:
         print('Getting weather images encoded, not downloading to local path')
-        train_images, train_labels = read_images_from_s3(s3, bucket_name, aws_folder)
+        train_images, train_labels = read_images_from_s3_as_train_data(s3, bucket_name, aws_folder)
 
     # Converting labels into One Hot encoded sparse matrix and images into numpy array
     train_labels = pd.get_dummies(train_labels).values.reshape(-1, 4)
