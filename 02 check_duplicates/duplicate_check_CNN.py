@@ -8,7 +8,7 @@ def duplicate_check_CNN(local_folder, req_threshold, invalid_files):
     for key, value in duplicates.items():
         if len(value) > 0:
             for image, percentage in value:
-                invalid_files.append((key, image, 'score_duplicate_CNN', percentage))
+                invalid_files.append((key, image))
             print(f'{key} is a duplicate of {image} with {percentage}% similarity')
 
     return invalid_files
