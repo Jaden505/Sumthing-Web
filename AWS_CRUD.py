@@ -46,19 +46,23 @@ def move_image_within_s3_bucket(source_folder, destination_folder, image_filenam
     source_key = f"{source_folder}/{image_filename}"
     destination_key = f"{destination_folder}/{image_filename}"
 
-    # Copy the object to the destination folder
-    s3.copy_object(Bucket=bucket_name, CopySource={'Bucket': bucket_name, 'Key': source_key},
-                          Key=destination_key)
+    try:
+        # Copy the object to the destination folder
+        s3.copy_object(Bucket=bucket_name, CopySource={'Bucket': bucket_name, 'Key': source_key},
+                              Key=destination_key)
 
-    # Delete the object from the source folder
-    s3.delete_object(Bucket=bucket_name, Key=source_key)
+        # Delete the object from the source folder
+        s3.delete_object(Bucket=bucket_name, Key=source_key)
+    except Exception:
+        print('File is already in duplicate folder')
+        return
 
 
 def add_metadata_to_image(aws_path_to_image, metadata):
     s3, bucket_name = conn_AWS()
 
     # Convert metadata values to strings or list of strings
-    metadata = {key: json.dumps(value) if isinstance(value, list) else value for key, value in metadata.items()}
+    metadata = {key: str(value) for key, value in metadata.items()}
 
     s3.copy_object(
         Bucket=bucket_name,
@@ -94,6 +98,9 @@ def update_duplicate(path_to_image, path_to_dup_img):
     metadata = get_metadata_from_image(path_to_image)
     if 'duplicates' in metadata:
         parsed_duplicates = json.loads(metadata['duplicates'])
+        if path_to_dup_img in parsed_duplicates:
+            return False
+
         parsed_duplicates.append(path_to_dup_img)
         metadata['duplicates'] = parsed_duplicates
         update_metadata_of_image(path_to_image, metadata)
@@ -148,3 +155,7 @@ def download_weather_train_data(local_folder):
             train_images.append(img)
 
     return train_images, train_labels
+
+
+s3, bucket_name = conn_AWS()
+print(get_metadata_from_image('DuplicateImages/1_4687.JPG')['duplicates'])
