@@ -57,47 +57,54 @@ def move_image_within_s3_bucket(source_folder, destination_folder, image_filenam
 def add_metadata_to_image(aws_path_to_image, metadata):
     s3, bucket_name = conn_AWS()
 
-    # Convert metadata values to strings
-    metadata = {key: str(value) for key, value in metadata.items()}
+    # Convert metadata values to strings or list of strings
+    metadata = {key: json.dumps(value) if isinstance(value, list) else value for key, value in metadata.items()}
 
-    try:
-        s3.copy_object(
-            Bucket=bucket_name,
-            CopySource={'Bucket': bucket_name, 'Key': aws_path_to_image},
-            Key=aws_path_to_image,
-            Metadata=metadata,
-            MetadataDirective='REPLACE'
-        )
-    except ClientError:
-        print('Cant add metadata because image cant be found in bucket')
+    s3.copy_object(
+        Bucket=bucket_name,
+        CopySource={'Bucket': bucket_name, 'Key': aws_path_to_image},
+        Key=aws_path_to_image,
+        Metadata=metadata,
+        MetadataDirective='REPLACE'
+    )
 
 
-def get_metadata_from_image(path_to_image):
+def get_metadata_from_image(aws_path_to_image):
     s3, bucket_name = conn_AWS()
 
-    try:
-        response = s3.head_object(Bucket=bucket_name, Key=path_to_image)
-    except ClientError:
-        print('Cant get metadata because image cant be found in bucket')
+    response = s3.head_object(Bucket=bucket_name, Key=aws_path_to_image)
 
     return response['Metadata']
 
 
-def update_image_score(path_to_image, score, score_type):
+def update_metadata_of_image(aws_path_to_image, metadata):
+    s3, bucket_name = conn_AWS()
+
+    # Convert metadata values to strings or list of strings
+    metadata = {key: json.dumps(value) if isinstance(value, list) else value for key, value in metadata.items()}
+
+    s3.put_object(
+        Bucket=bucket_name,
+        Key=aws_path_to_image,
+        Metadata=metadata
+    )
+
+
+def update_duplicate(path_to_image, path_to_dup_img):
     metadata = get_metadata_from_image(path_to_image)
-    metadata[score_type] = score
+    if 'duplicates' in metadata:
+        parsed_duplicates = json.loads(metadata['duplicates'])
+        parsed_duplicates.append(path_to_dup_img)
+        metadata['duplicates'] = parsed_duplicates
+        update_metadata_of_image(path_to_image, metadata)
+    else:
+        metadata['duplicates'] = [path_to_dup_img]
+        update_metadata_of_image(path_to_image, metadata)
 
-    add_metadata_to_image(path_to_image, metadata)
 
-    return metadata
-
-
-def update_image_score_duplicate(path_to_image, path_to_dup_img, score, score_type):
-    metadata = update_image_score(path_to_image, score, score_type)
-    metadata['duplicate'] = path_to_dup_img
-
-    metadata = update_image_score(path_to_dup_img, score, score_type)
-    metadata['duplicate'] = path_to_image
+def update_image_duplicates(path_to_image, path_to_dup_img):
+    update_duplicate(path_to_image, path_to_dup_img)
+    update_duplicate(path_to_dup_img, path_to_image)
 
 
 def read_images_from_s3_as_train_data(s3, bucket_name, folder_name):
