@@ -3,12 +3,36 @@
 {% block title %}Image Gallery{% endblock %}
 
 {% block content %}
-<div class="thumbnails" onwheel="handleScroll(event)">
-    {% for image in images %}
-        <img class="thumbnail" src="{{ image }}" alt="Image"
-             onclick="updateSelectedImage(this)">
-    {% endfor %}
-</div>
+    <h1>Image Gallery</h1>
+    <div id="image-modal">
+        <img id="selected-image" alt="Selected Image" src="{{ images[0].url }}">
+        <div id="image-metadata"></div>
+    </div>
+
+    <div class="thumbnails">
+        {% for image in images %}
+        <div class="thumbnail" onclick="displayImage('{{ image }}')">
+            <img src="{{ image.url }}" alt="Image" width="100" height="100">
+        </div>
+        {% endfor %}
+    </div>
+
+
+    <script>
+        function displayImage(image) {
+            var selectedImageElement = document.getElementById('selected-image');
+            var imageMetadataElement = document.getElementById('image-metadata');
+            selectedImageElement.src = image.url;
+
+            imageMetadataElement.innerHTML = `
+                <h2>Location: ${image.latitude}, ${image.longitude}</h2>
+                <h2>Date picture taken: ${image.date}</h2>
+            `;
+
+            var modalElement = document.getElementById('image-modal');
+            modalElement.style.display = 'block';
+        }
+    </script>
 {% endblock %}
 
 
