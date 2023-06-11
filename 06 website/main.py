@@ -3,34 +3,49 @@ import os
 
 from flask import Flask, render_template, jsonify, request
 from werkzeug.utils import secure_filename
-from config import load_config
-
-from models.proof import Proof, db
-
+from AWS_CRUD import conn_AWS, get_image_urls
+from PIL import Image
 
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-config = load_config("../config.json")
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{config["PG_user"]}:{config["PG_password"]}@{config["PG_host"]}:{config["PG_port"]}/{config["PG_database"]}'
-app.config['UPLOAD_FOLDER'] = '06 website/static/images'  # Update this with desired upload directory
 
-db.init_app(app)
+#  Get Images from AWS S3
+s3, bucket_name = conn_AWS()
+AWS_FOLDER = 'AllImages/'
+
+app.config['image_files'] = get_image_urls(s3, bucket_name, AWS_FOLDER)
+print(app.config['image_files'])
+
+
+def is_valid_image(image_url):
+    try:
+        # Open the image using PIL
+        with Image.open(image_url) as img:
+            # Verify that the image can be loaded without errors
+            img.verify()
+            return True
+    except (IOError, SyntaxError):
+        return False
+
+
+for url in app.config['image_files']:
+    if not is_valid_image(url):
+        app.config['image_files'].remove(url)
 
 
 @app.route('/')
 def index():
-    image_files = os.listdir(app.config['UPLOAD_FOLDER'])
-    return render_template('index.html', images=image_files)
+    return render_template('index.html', images=app.config['image_files'])
 
 
-@app.route("/anomaly_check")
-def anomaly_check():
-    return render_template("anomaly_check.html")
+@app.route('/weather', methods=['GET'])
+def weather():
+    return render_template('weather.html')
 
 
 @app.route('/upload_images', methods=['POST'])
@@ -50,24 +65,6 @@ def upload_images():
         return jsonify({"message": "Files uploaded successfully", "filenames": filenames}), 200
     else:
         return jsonify({"error": "No valid image files received"}), 400
-
-
-@app.route('/get_image_data', methods=['GET'])
-def get_image_data():
-    query_param = request.args.get('query')
-    data = Proof.query.filter_by(img_name=query_param).all()
-    if data:
-        data_list = [
-            {'proof_key': item.proof_key,
-             'img_name': item.img_name,
-             'img_creation_date': item.img_creation_date,
-             'latitude': round(float(item.img_latitude), 2),
-             'longitude': round(float(item.img_longitude), 2),
-             'altitude': item.img_altitude}
-            for item in data]
-        return jsonify(data_list)
-    else:
-        return jsonify({'message': 'Data not found'})
 
 
 if __name__ == '__main__':
