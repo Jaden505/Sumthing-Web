@@ -1,49 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Gallery</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-<header>
-    <img class="logo" src="{{ url_for('static', filename='logo.webp') }}" alt="Logo">
-    <nav class="nav">
-        <a class="nav-item" href="#individual">Individual</a>
-        <a class="nav-item" href="#business">Business</a>
-        <a class="nav-item" href="#project">Project</a>
-        <a class="nav-item" href="#impact">Impact</a>
-        <a class="nav-item selected" href="#pictures">Pictures</a>
-        <a class="nav-item" href="#contribute">Contribute Now</a>
-        <a class="nav-item" href="{{ url_for('anomaly_check') }}">Anomaly detection</a>
-    </nav>
-</header>
-<div class="image-details">
-    <img id="selected-image" src="{{ url_for('static', filename='images/' + images[0]) }}" alt="{{ images[0] }}">
-    <div class="image-info">
-        <div>Date: <span id="image-date">2023-03-29</span></div>
-        <div>Coordinates: <span id="image-coordinates">40.7128° N, 74.0060° W</span>
-            <img class="maps-icon" src="{{ url_for('static', filename='map.png') }}" alt="Google Maps"></div>
-        <div>Contributor: <span id="image-camera">Randy Marsh</span></div>
-    </div>
-</div>
+{% extends 'base.html' %}
 
-<div class="weather-details">
-    <div class="weather-info">
-        <canvas id="weatherChart"></canvas>
-    </div>
-</div>
+{% block title %}Image Gallery{% endblock %}
 
+{% block content %}
 <div class="thumbnails" onwheel="handleScroll(event)">
     {% for image in images %}
-        <img class="thumbnail" src="{{ url_for('static', filename='images/' + image) }}" alt="{{ image }}"
+        <img class="thumbnail" src="{{ image }}" alt="Image"
              onclick="updateSelectedImage(this)">
     {% endfor %}
 </div>
-<script src="{{ url_for('static', filename='script.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+{% endblock %}
 
-</body>
-</html>
+
