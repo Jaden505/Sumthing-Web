@@ -1,6 +1,8 @@
 from PIL import Image
 import requests
 from io import BytesIO
+import random
+from datetime import datetime
 
 from AWS_CRUD import conn_AWS, get_image_urls, get_metadata_from_image
 
@@ -24,14 +26,14 @@ def get_img_urls_and_metadata():
     for file in image_files:
         url, img_name = file[0], file[1]
 
-
         if not is_valid_image(url):
-            image_files.remove((url, img_name))
             continue
 
         metadata = get_metadata_from_image(AWS_FOLDER + img_name)
+        metadata['taken_date'] = datetime.strptime(metadata['taken_date'], '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d')
+        random_id = random.randint(1, 1000000)
 
-        images_data.append({'url': url, 'latitude': metadata['latitude'],
+        images_data.append({'id': random_id, 'url': url, 'latitude': metadata['latitude'],
                             'longtitude': metadata['longitude'], 'date': metadata['taken_date']})
 
     return images_data

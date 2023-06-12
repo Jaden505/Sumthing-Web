@@ -1,5 +1,6 @@
 
 async function getHistoricalWeatherData(latitude, longitude, date) {
+    console.log(latitude, longitude, date)
     const response = await fetch(`https://archive-api.open-meteo.com/v1/archive?latitude=${latitude}&longitude=${longitude}&start_date=${date}&end_date=${date}&hourly=temperature_2m,rain`);
 
     const imageDate = new Date(date);
