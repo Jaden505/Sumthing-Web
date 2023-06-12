@@ -12,15 +12,39 @@ def get_s3_client(AWS_access_key_id, AWS_secret_access_key):
 
 
 # incrementele database functie toevoegen 
-def clear_images_table(PG_database, PG_user, PG_password, PG_host, PG_port):
+def populate_if_different(AWS_access_key_id, AWS_secret_access_key, AWS_bucket_name, AWS_folder_name, PG_database,
+                          PG_user, PG_password, PG_host, PG_port):
     conn = psycopg2.connect(database=PG_database, user=PG_user, password=PG_password, host=PG_host, port=PG_port)
     cur = conn.cursor()
 
-    cur.execute("DELETE FROM images")
+    # Get data from S3 bucket
+    images, filenames = add_images_to_database(AWS_access_key_id, AWS_secret_access_key, AWS_bucket_name,
+                                               AWS_folder_name, PG_database, PG_user, PG_password, PG_host, PG_port)
+
+    # For each new row to be inserted...
+    for filename, img, folder_name, outlier_score in zip(filenames, images, [AWS_folder_name] * len(images),
+                                                         [0] * len(images)):
+        # Checks if a row with the same data already exists
+        cur.execute(
+            "SELECT * FROM images WHERE filename = %s AND folder_name = %s AND image_data = %s AND outlier_score = %s",
+            (filename, folder_name, img.tobytes(), outlier_score))
+        rows = cur.fetchall()
+
+        # If not, insert the new row
+        if len(rows) == 0:
+            cur.execute(
+                "INSERT INTO images (filename, folder_name, image_data, outlier_score) VALUES (%s, %s, %s, %s)",
+                (filename, folder_name, img.tobytes(), outlier_score))
+            print(f"Inserted {filename} into the database.")
+        else:
+            print(f"{filename} already exists in the database.")
 
     conn.commit()
     cur.close()
     conn.close()
+
+    # Return images and filenames
+    return images, filenames
 
 
 def add_images_to_database(AWS_access_key_id, AWS_secret_access_key, AWS_bucket_name, AWS_folder_name, PG_database,

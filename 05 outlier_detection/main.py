@@ -5,8 +5,7 @@ import numpy as np
 from config import load_config
 from database import (
     add_images_to_database,
-    clear_images_table,
-    update_outlier_scores,
+    update_outlier_scores, populate_if_different,
 )
 from feature_extraction import (
     extract_wavelet_features,
@@ -24,11 +23,8 @@ if __name__ == "__main__":
                                                "AWS_folder_name"]}
     db_config = {key: config[key] for key in ["PG_database", "PG_user", "PG_password", "PG_host", "PG_port"]}
 
-    # Clear the images table
-    clear_images_table(**db_config)
-
-    # Populate the database with images and also load into an array
-    images, filenames = add_images_to_database(**aws_config, **db_config)
+    # Replace the table population line with the following:
+    images, filenames = populate_if_different(**aws_config, **db_config)
 
     # Extract wavelet features and other features
     features = extract_wavelet_features(images)
@@ -57,9 +53,9 @@ if __name__ == "__main__":
             print("Possible Outlier images:")
             outlier_filenames = [filename for filename, score in outliers]
             outlier_scores = [score for filename, score in outliers]
-            update_outlier_scores(PG_database=db_config['database'], PG_user=db_config['user'],
-                                  PG_password=db_config['password'],
-                                  PG_host=db_config['host'], PG_port=db_config['port'], filenames=outlier_filenames,
+            update_outlier_scores(PG_database=db_config['PG_database'], PG_user=db_config['PG_user'],
+                                  PG_password=db_config['PG_password'],
+                                  PG_host=db_config['PG_host'], PG_port=db_config['PG_port'], filenames=outlier_filenames,
                                   outlier_scores=outlier_scores)
 
             outliers_sorted = sorted(outliers, key=lambda x: x[1], reverse=True)
