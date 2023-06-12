@@ -9,6 +9,10 @@
         <div id="image-metadata">
             <h2>Location: {{ images[0].latitude }}, {{ images[0].longtitude }}</h2>
             <h2>Picture taken at: {{ images[0].date }}</h2>
+            <div class="details">
+                <button class="details-btn" id="go-to-weatherchart" onclick="window.location.href='/weather/' + {{ images[0].id }}">See weather info</button>
+                <button class="details-btn" id="delete-image" onclick="deleteImage(${image[0].id})">Delete Image</button>
+            </div>
         </div>
     </div>
 
