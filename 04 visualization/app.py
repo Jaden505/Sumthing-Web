@@ -13,12 +13,14 @@ from helper_visualisation import plot_map, plotbar
 from db_READ import select_lat_lon, select_batches, select_all_comparable_image
 from db_READ import select_batches_metadata, select_batches_totalscore
 
-
 import dotenv
-import os
+from config import load_config
+
+
+config = load_config('../config.json')
 
 dotenv.load_dotenv()
-DATABASE_TO_URI = os.environ['DATABASE_TO_URI']
+DATABASE_TO_URI = f'postgresql://{config["PG_user"]}:{config["PG_password"]}@{config["PG_host"]}:{config["PG_port"]}/{config["PG_database"]}'
 
 app = Flask(__name__)
 nav = Navigation(app)
@@ -37,7 +39,7 @@ nav.Bar('top', [
 @app.route('/')
 def index():
     tijd = dt.datetime.now()
-    files =[]
+    files = []
     return render_template('index.html', files=files, time=tijd)
 
 
@@ -46,6 +48,7 @@ def visualisatie():
     batches = list()
     for i in select_batches(DATABASE_TO_URI):
         batches.append(i[0])
+    print(batches)
 
     return render_template('visualisatie.html', files=batches)
 
@@ -102,6 +105,20 @@ def map():
     """
     return render_template('visualisatie.html', metadata=metadata, files=batches, graphJSON=graphJSON, header=header, description=description)
 
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if request.method == 'POST':
+        try:
+            f = request.files['file']
+            f.save(secure_filename(f.filename))
+            flash('File successfully uploaded')
+        except RequestEntityTooLarge:
+            flash('File too large')
+        except:
+            flash('Something went wrong')
+        return redirect('/upload')
+    return render_template('upload.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

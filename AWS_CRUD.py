@@ -3,7 +3,6 @@ import cv2
 import boto3
 import os
 import json
-from botocore.exceptions import ClientError
 
 
 def conn_AWS():
@@ -24,11 +23,22 @@ def upload_img(s3, bucket_name, folder_name, file_path):
 
 
 def get_images(s3, bucket_name, folder_name):
-    response = s3.list_objects(Bucket=bucket_name, Prefix=folder_name + '/')
+    response = s3.list_objects(Bucket=bucket_name, Prefix=folder_name)
     objects = []
     if 'Contents' in response:
         objects = [obj['Key'] for obj in response['Contents']]
     return objects
+
+
+def get_image_urls(s3, bucket_name, folder_name):
+    response = s3.list_objects_v2(Bucket=bucket_name, Prefix=folder_name)
+    images = []
+    for obj in response['Contents']:
+        image_url = s3.generate_presigned_url('get_object', Params={'Bucket': bucket_name, 'Key': obj['Key']})
+        image_name = obj['Key'].split('/')[-1]
+        images.append((image_url, image_name))
+
+    return images[1:]  # Skip the first image, which is the folder itself
 
 
 def update_img(s3, bucket_name, folder_name, file_path):

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Image Gallery{% endblock %}
+
+{% block content %}
+    <div class="weather-details">
+        <div class="weather-info">
+            <canvas id="weatherChart"></canvas>
+        </div>
+    </div>
+
+<script>
+getHistoricalWeatherData(51.5074, 0.1278, '2021-01-01').then(data => {
+    buildWeatherGraph(data);
+});
+</script>
+{% endblock %}
