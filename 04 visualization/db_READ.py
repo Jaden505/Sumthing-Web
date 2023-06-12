@@ -5,10 +5,13 @@ from sqlalchemy import select
 import dotenv
 
 from db_ORM import Batch, AllImage
+from config import load_config
+
 
 dotenv.load_dotenv()
-#url = os.environ['DATABASE_TO_URI']
-url = 'DATABASE_TO_URI'
+config = load_config("../config.json")
+url = f'postgresql://{config["PG_user"]}:{config["PG_password"]}@{config["PG_host"]}:{config["PG_port"]}/{config["PG_database"]}'
+
 
 def connect_database(url):
     try:
