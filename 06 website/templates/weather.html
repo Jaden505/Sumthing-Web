@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}Image Gallery{% endblock %}
+{% block title %}Weather Classification Results{% endblock %}
 
 {% block content %}
-
+    <h1>Weather Classification Results</h1>
+    <p>Sunny: {{ sunny_percentage }}%</p>
+    <p>Rainy: {{ rainy_percentage }}%</p>
+    <p>Cloudy: {{ cloudy_percentage }}%</p>
 {% endblock %}

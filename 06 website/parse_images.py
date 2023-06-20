@@ -19,6 +19,7 @@ def is_valid_image(image_url):
     except (IOError, SyntaxError):
         return False
 
+
 def get_img_urls_and_metadata():
     s3, bucket_name = conn_AWS()
     AWS_FOLDER = 'AllImages/'
