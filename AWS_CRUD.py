@@ -30,6 +30,19 @@ def get_images(s3, bucket_name, folder_name):
     return objects
 
 
+def get_images_with_metadata(s3, bucket_name, folder_name):
+    response = s3.list_objects(Bucket=bucket_name, Prefix=folder_name + '/')
+    objects = []
+
+    if 'Contents' in response:
+        for obj in response['Contents']:
+            image_path = obj['Key']
+            metadata = get_metadata_from_image(image_path)
+            objects.append({'Image': image_path, 'Metadata': metadata})
+
+    return objects
+
+
 def get_image_urls(s3, bucket_name, folder_name):
     response = s3.list_objects_v2(Bucket=bucket_name, Prefix=folder_name)
     images = []
@@ -168,4 +181,4 @@ def download_weather_train_data(local_folder):
 
 
 s3, bucket_name = conn_AWS()
-print(get_metadata_from_image('DuplicateImages/1_4687.JPG')['duplicates'])
+print(get_metadata_from_image('new-batch/IMG_4574.JPG'))
