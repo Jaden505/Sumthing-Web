@@ -4,6 +4,9 @@ from io import BytesIO
 import random
 from datetime import datetime
 
+import sys
+sys.path.append('..')  
+
 from AWS_CRUD import conn_AWS, get_image_urls, get_metadata_from_image
 
 
