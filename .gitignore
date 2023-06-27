@@ -47,3 +47,5 @@ secrets.json
 
 # Log files
 *.log
+./venv/
+./venv
